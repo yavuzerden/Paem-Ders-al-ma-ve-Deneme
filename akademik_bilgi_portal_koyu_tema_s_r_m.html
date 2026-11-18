@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akademik Bilgi Portalı | PAEM & Yüksek Lisans Sınav Sistemi</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        midnight: {
+                            950: '#090d16',
+                            900: '#111827',
+                            850: '#161f33',
+                            800: '#1e293b'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #090d16;
+            color: #f1f5f9;
+        }
+        .prose-academic h3 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 700;
+            font-size: 1.15em;
+            color: #f8fafc;
+            margin-top: 1.4rem;
+            margin-bottom: 0.65rem;
+        }
+        .prose-academic p {
+            margin-bottom: 0.9rem;
+            line-height: 1.75;
+            color: #cbd5e1;
+        }
+        .prose-academic ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            margin-bottom: 1.15rem;
+            color: #cbd5e1;
+        }
+        .prose-academic li {
+            margin-bottom: 0.45rem;
+            line-height: 1.65;
+        }
+        .optik-scroll::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .optik-scroll::-webkit-scrollbar-track {
+            background: #090d16;
+            border-radius: 9999px;
+        }
+        .optik-scroll::-webkit-scrollbar-thumb {
+            background-color: #334155;
+            border-radius: 9999px;
+        }
+    </style>
+</head>
+<body class="bg-[#090d16] text-[#f1f5f9] min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+
+    <!-- Üst Gezinme Çubuğu (Header) -->
+    <header class="sticky top-0 z-30 bg-[#111827]/90 backdrop-blur-md border-b border-[#1e293b] shadow-lg shadow-black/20">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-3">
+            <!-- Logo ve Başlık -->
+            <div class="flex items-center gap-3 cursor-pointer group" onclick="resetToHome()">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-blue-700 text-white flex items-center justify-center text-xl shadow-md shadow-indigo-950/50 group-hover:scale-105 transition-transform">
+                    🎓
+                </div>
+                <div>
+                    <h1 class="font-display font-bold text-base sm:text-xl tracking-tight text-[#f1f5f9] leading-tight">
+                        Akademik Bilgi Portalı
+                    </h1>
+                    <p class="text-[11px] sm:text-xs text-slate-400 hidden sm:block">
+                        PAEM & Yüksek Lisans Ders Notları ve Sınav Sistemi
+                    </p>
+                </div>
+            </div>
+
+            <!-- Sağ Aksiyon Butonları -->
+            <div class="flex items-center gap-2 sm:gap-2.5">
+                <div id="progressBadge" class="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-950/60 border border-emerald-800/70 text-emerald-300 text-xs font-semibold">
+                    <span>✓</span>
+                    <span id="readCountText">0 Not Okundu</span>
+                </div>
+
+                <!-- Skor Tablosu Butonu -->
+                <button onclick="openLeaderboardModal()" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-300 transition flex items-center gap-1.5 shadow-sm">
+                    <span>🏆</span>
+                    <span>Skor Tablosu</span>
+                </button>
+
+                <!-- İçerik Ekleme Rehberi -->
+                <button onclick="openHelpModal()" class="p-2 sm:px-3 sm:py-2 rounded-xl text-xs sm:text-sm font-medium bg-[#1e293b] hover:bg-slate-700/80 border border-slate-700/70 text-slate-200 transition flex items-center gap-1.5" title="Soru ve Not Ekleme Rehberi">
+                    <span>⚙️</span>
+                    <span class="hidden md:inline">Soru Ekle</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Ana İçerik Alanı -->
+    <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-10 flex flex-col justify-center">
+        
+        <!-- 1. GİRİŞ EKRANI: 3 ANA ERİŞİM KARTI + SKOR TABLOSU ÖZETİ -->
+        <section id="landingMenuView" class="space-y-8 my-auto">
+            <div class="text-center max-w-2xl mx-auto space-y-3">
+                <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-indigo-950/80 border border-indigo-800/70 text-indigo-300 text-xs font-semibold">
+                    <span>🎓</span>
+                    <span>PAEM & Yüksek Lisans Hazırlık Platformu</span>
+                </span>
+                <h2 class="font-display font-extrabold text-2xl sm:text-3xl text-[#f1f5f9] tracking-tight">
+                    Çalışmak İstediğiniz Bölümü Seçin
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-400">
+                    Ders notları, konu testleri ve kullanıcı adı ile puan sıralamalı 100 soruluk deneme sınavlarına aşağıdan erişebilirsiniz.
+                </p>
+
+                <!-- Global Arama Çubuğu -->
+                <div class="pt-2 max-w-lg mx-auto">
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 text-base pointer-events-none">
+                            🔍
+                        </span>
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            oninput="handleSearch(this.value)"
+                            placeholder="Tüm derslerde konu veya not ara..." 
+                            class="w-full pl-10 pr-10 py-3 rounded-2xl bg-[#111827] border border-[#1e293b] text-[#f1f5f9] shadow-inner focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs sm:text-sm placeholder-slate-500 transition"
+                        >
+                        <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-white text-xs font-bold">
+                            ✕
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3 Büyük Erişim Butonu / Kartı -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+                <!-- Kart 1: PAEM Dersleri -->
+                <button 
+                    onclick="selectCategoryView('paem-dersleri')"
+                    class="group text-left p-6 sm:p-7 rounded-3xl bg-[#111827] border-2 border-[#1e293b] hover:border-sky-500/80 shadow-xl shadow-black/30 hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between gap-6"
+                >
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="w-14 h-14 rounded-2xl bg-sky-950/70 border border-sky-800/70 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
+                                👮‍♂️
+                            </div>
+                            <span class="px-3 py-1 rounded-full bg-sky-950/90 border border-sky-800/60 text-sky-300 text-[11px] font-bold">
+                                5 Ders + 100 Soru
+                            </span>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-extrabold text-xl text-[#f1f5f9] group-hover:text-sky-400 transition">
+                                PAEM Dersleri
+                            </h3>
+                            <p class="text-xs sm:text-sm text-slate-400 mt-1.5 leading-relaxed">
+                                Kolluk Hukuku, Amirlik Uygulamaları, PMYT, Mesleki İngilizce, Silah Bilgisi ve Taktik Atış notları ve 100 soruluk denemesi.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="pt-3 border-t border-[#1e293b] flex items-center justify-between text-xs sm:text-sm font-bold text-sky-400">
+                        <span>Derslere Giriş Yap</span>
+                        <span class="group-hover:translate-x-1 transition-transform">→</span>
+                    </div>
+                </button>
+
+                <!-- Kart 2: Yüksek Lisans Dersleri -->
+                <button 
+                    onclick="selectCategoryView('yl-dersleri')"
+                    class="group text-left p-6 sm:p-7 rounded-3xl bg-[#111827] border-2 border-[#1e293b] hover:border-indigo-500/80 shadow-xl shadow-black/30 hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between gap-6"
+                >
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="w-14 h-14 rounded-2xl bg-indigo-950/70 border border-indigo-800/70 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
+                                📚
+                            </div>
+                            <span class="px-3 py-1 rounded-full bg-indigo-950/90 border border-indigo-800/60 text-indigo-300 text-[11px] font-bold">
+                                5 Ders + 100 Soru
+                            </span>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-extrabold text-xl text-[#f1f5f9] group-hover:text-indigo-400 transition">
+                                Yüksek Lisans Dersleri
+                            </h3>
+                            <p class="text-xs sm:text-sm text-slate-400 mt-1.5 leading-relaxed">
+                                Kamu Yönetimi, Ceza Hukuku, Anayasal Düzen, Polislik Kültürü ve Etik, Bilimsel Araştırma notları ve 100 soruluk denemesi.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="pt-3 border-t border-[#1e293b] flex items-center justify-between text-xs sm:text-sm font-bold text-indigo-400">
+                        <span>Derslere Giriş Yap</span>
+                        <span class="group-hover:translate-x-1 transition-transform">→</span>
+                    </div>
+                </button>
+
+                <!-- Kart 3: Karma Deneme (100 Soru) -->
+                <button 
+                    onclick="promptUserBeforeExam('karma')"
+                    class="group text-left p-6 sm:p-7 rounded-3xl bg-gradient-to-br from-[#1e293b] via-[#15203b] to-[#111827] border-2 border-indigo-500/50 hover:border-amber-400 shadow-xl shadow-black/40 hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between gap-6"
+                >
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="w-14 h-14 rounded-2xl bg-amber-500/15 border border-amber-400/30 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
+                                🎯
+                            </div>
+                            <span class="px-3 py-1 rounded-full bg-amber-400 text-slate-950 text-[11px] font-extrabold shadow-sm">
+                                10 Ders × 10 Soru
+                            </span>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-extrabold text-xl text-[#f1f5f9] group-hover:text-amber-300 transition">
+                                Karma Deneme (100 Soru)
+                            </h3>
+                            <p class="text-xs sm:text-sm text-slate-300 mt-1.5 leading-relaxed">
+                                Tüm PAEM ve Yüksek Lisans derslerinden eşit dağılımlı (10×10) genel deneme. Kullanıcı adınızı girin ve sıralamaya katılın!
+                            </p>
+                        </div>
+                    </div>
+                    <div class="pt-3 border-t border-slate-700/70 flex items-center justify-between text-xs sm:text-sm font-bold text-amber-300">
+                        <span>Sınava Başla & Sıralamaya Gir</span>
+                        <span class="group-hover:translate-x-1 transition-transform">🚀</span>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Ana Sayfa Altı Hızlı Skor Tablosu Bandı -->
+            <div class="bg-[#111827] rounded-2xl border border-[#1e293b] p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg shadow-black/25">
+                <div class="flex items-center gap-3.5">
+                    <div class="w-11 h-11 rounded-2xl bg-amber-500/15 border border-amber-500/35 flex items-center justify-center text-2xl shrink-0">
+                        🏆
+                    </div>
+                    <div>
+                        <h4 class="font-display font-bold text-sm sm:text-base text-[#f1f5f9]">
+                            Deneme Sınavı Puan Sıralaması (Liderlik Tablosu)
+                        </h4>
+                        <p id="landingLeaderPreviewText" class="text-xs text-slate-400 mt-0.5">
+                            Sınavı çözen adayların net ve puan sıralamasını görüntüleyin.
+                        </p>
+                    </div>
+                </div>
+                <button onclick="openLeaderboardModal()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs sm:text-sm font-extrabold transition shadow-sm shrink-0">
+                    Tüm Sıralamayı Gör →
+                </button>
+            </div>
+        </section>
+
+        <!-- 2. KATEGORİ DETAY GÖRÜNÜMÜ (PAEM veya Yüksek Lisans Dersleri) -->
+        <section id="categoryDetailView" class="hidden space-y-5">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#111827] p-3.5 sm:p-4 rounded-2xl border border-[#1e293b] shadow-lg shadow-black/20">
+                <button 
+                    onclick="resetToHome()"
+                    class="inline-flex items-center justify-center sm:justify-start gap-2 px-4 py-2.5 rounded-xl bg-[#1e293b] hover:bg-indigo-600 text-[#f1f5f9] hover:text-white text-xs sm:text-sm font-bold transition shrink-0"
+                >
+                    <span>←</span>
+                    <span>Ana Sayfaya Dön</span>
+                </button>
+
+                <div class="relative flex-1 max-w-md">
+                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 text-sm pointer-events-none">
+                        🔍
+                    </span>
+                    <input 
+                        type="text" 
+                        id="subSearchInput" 
+                        oninput="handleSearch(this.value)"
+                        placeholder="Ders adı, not veya konu ara..." 
+                        class="w-full pl-9 pr-9 py-2.5 rounded-xl bg-[#090d16] border border-[#1e293b] text-[#f1f5f9] focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs sm:text-sm placeholder-slate-500 transition"
+                    />
+                    <button id="subClearSearchBtn" onclick="clearSearch()" class="hidden absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-white text-xs font-bold">
+                        ✕
+                    </button>
+                </div>
+
+                <div class="hidden md:flex items-center gap-2 text-xs shrink-0">
+                    <button onclick="expandAll(true)" class="font-semibold text-indigo-400 hover:underline">Tümünü Aç</button>
+                    <span class="text-slate-700">|</span>
+                    <button onclick="expandAll(false)" class="font-semibold text-slate-400 hover:underline">Tümünü Kapat</button>
+                </div>
+            </div>
+
+            <div id="portalContainer" class="space-y-6"></div>
+
+            <div id="emptySearchState" class="hidden text-center py-12 bg-[#111827] rounded-2xl border border-[#1e293b]">
+                <div class="text-4xl mb-3">📭</div>
+                <h3 class="font-display font-bold text-lg text-[#f1f5f9]">Sonuç Bulunamadı</h3>
+                <p class="text-sm text-slate-400 mt-1">Aradığınız kelimeyle eşleşen içerik kaydı yok.</p>
+                <button onclick="clearSearch()" class="mt-4 px-4 py-2 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 transition">
+                    Aramayı Temizle
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Alt Bilgi (Footer) -->
+    <footer class="border-t border-[#1e293b] bg-[#111827] py-5 mt-12">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-400">
+            <p>© 2026 Akademik Bilgi Portalı — PAEM & Yüksek Lisans Eğitim Sistemi</p>
+            <p>Statik Tek Dosya Mimari • Koyu Gece Teması</p>
+        </div>
+    </footer>
+
+    <!-- KULLANICI ADI GİRİŞ MODALI (Deneme Başlangıcı) -->
+    <div id="userNameModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-[#111827] w-full max-w-md rounded-3xl shadow-2xl border border-[#1e293b] overflow-hidden">
+            <div class="px-6 py-5 bg-gradient-to-r from-[#1e293b] to-[#111827] border-b border-slate-700/70 text-[#f1f5f9] flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">📝</span>
+                    <div>
+                        <h3 id="userModalExamTitle" class="font-display font-bold text-base sm:text-lg leading-snug">100 Soruluk Deneme</h3>
+                        <p class="text-xs text-indigo-300">Puan sıralaması için bilgilerinizi girin</p>
+                    </div>
+                </div>
+                <button onclick="closeUserNameModal()" class="w-8 h-8 rounded-xl bg-[#090d16] hover:bg-rose-950/60 hover:text-rose-400 flex items-center justify-center text-sm font-bold transition">✕</button>
+            </div>
+            <form onsubmit="confirmStartExamWithUser(event)" class="p-6 space-y-4">
+                <div>
+                    <label for="candidateNameInput" class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
+                        Kullanıcı Adı veya Ad Soyad
+                    </label>
+                    <input 
+                        type="text" 
+                        id="candidateNameInput" 
+                        required
+                        minlength="2"
+                        maxlength="35"
+                        placeholder="Örn: Komiser Yrd. Ahmet K. veya Rumuz"
+                        class="w-full px-4 py-3 rounded-xl bg-[#090d16] border border-[#1e293b] focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium text-[#f1f5f9] placeholder-slate-500"
+                    />
+                    <p id="userNameErrorMsg" class="hidden text-xs text-rose-400 font-semibold mt-1.5">Lütfen geçerli bir kullanıcı adı giriniz.</p>
+                </div>
+
+                <div class="p-3.5 rounded-xl bg-amber-950/30 border border-amber-700/40 text-xs text-amber-200 space-y-1">
+                    <div class="font-bold flex items-center gap-1.5 text-amber-300"><span>⚖️</span><span>Puanlama Kuralı:</span></div>
+                    <p>• Toplam <strong>100 Soru</strong> • Süre: <strong>100 Dakika</strong></p>
+                    <p>• <strong>4 yanlış 1 doğruyu</strong> götürür. Net sayınız üzerinden 100 tam puan hesaplanarak <strong>Skor Tablosuna</strong> kaydedilir.</p>
+                </div>
+
+                <div class="flex items-center justify-end gap-2.5 pt-2">
+                    <button type="button" onclick="closeUserNameModal()" class="px-4 py-2.5 rounded-xl bg-[#1e293b] hover:bg-slate-700 text-slate-300 text-xs sm:text-sm font-semibold transition">
+                        Vazgeç
+                    </button>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-bold shadow-md transition flex items-center gap-1.5">
+                        <span>Sınavı Başlat</span>
+                        <span>🚀</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- SKOR TABLOSU (LİDERLİK SIRALAMASI) MODALI -->
+    <div id="leaderboardModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4">
+        <div class="bg-[#111827] w-full max-w-4xl rounded-3xl shadow-2xl border border-[#1e293b] flex flex-col max-h-[90vh] overflow-hidden">
+            <div class="px-5 sm:px-6 py-4 border-b border-[#1e293b] bg-gradient-to-r from-[#1e293b] via-[#111827] to-[#1e293b] flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center text-xl shadow-sm">🏆</div>
+                    <div>
+                        <h3 class="font-display font-extrabold text-lg sm:text-xl text-[#f1f5f9]">Skor Tablosu (Puan Sıralaması)</h3>
+                        <p class="text-xs text-slate-400">Deneme sınavlarını tamamlayan adayların yüksek puandan düşüğe sıralaması</p>
+                    </div>
+                </div>
+                <button onclick="closeLeaderboardModal()" class="w-9 h-9 rounded-xl bg-[#090d16] hover:bg-rose-950/60 hover:text-rose-400 flex items-center justify-center font-bold transition">✕</button>
+            </div>
+
+            <!-- Sınav Türü Filtre Sekmeleri -->
+            <div class="px-5 sm:px-6 py-3 border-b border-[#1e293b] bg-[#090d16]/70 flex flex-wrap items-center justify-between gap-2">
+                <div class="flex flex-wrap gap-1.5">
+                    <button onclick="filterLeaderboard('all')" id="lbFilter-all" class="px-3 py-1.5 rounded-xl text-xs font-bold transition bg-indigo-600 text-white">Tümü</button>
+                    <button onclick="filterLeaderboard('karma')" id="lbFilter-karma" class="px-3 py-1.5 rounded-xl text-xs font-bold transition bg-[#1e293b] border border-slate-700 text-slate-300">🎯 Karma Deneme</button>
+                    <button onclick="filterLeaderboard('paem')" id="lbFilter-paem" class="px-3 py-1.5 rounded-xl text-xs font-bold transition bg-[#1e293b] border border-slate-700 text-slate-300">👮‍♂️ PAEM</button>
+                    <button onclick="filterLeaderboard('yuksekLisans')" id="lbFilter-yuksekLisans" class="px-3 py-1.5 rounded-xl text-xs font-bold transition bg-[#1e293b] border border-slate-700 text-slate-300">📚 Yüksek Lisans</button>
+                </div>
+                <span id="leaderboardTotalCount" class="text-xs font-semibold text-slate-400">0 Kayıt</span>
+            </div>
+
+            <!-- Sıralama Tablosu -->
+            <div class="flex-1 overflow-y-auto p-4 sm:p-6">
+                <div class="overflow-x-auto rounded-2xl border border-[#1e293b]">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-[#090d16] text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-[#1e293b]">
+                                <th class="py-3 px-3 sm:px-4 w-14 text-center">Sıra</th>
+                                <th class="py-3 px-3 sm:px-4">Kullanıcı Adı</th>
+                                <th class="py-3 px-3 sm:px-4 hidden sm:table-cell">Sınav Türü</th>
+                                <th class="py-3 px-3 sm:px-4 text-center">D / Y</th>
+                                <th class="py-3 px-3 sm:px-4 text-center">Net</th>
+                                <th class="py-3 px-3 sm:px-4 text-right">Puan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboardTableBody" class="divide-y divide-[#1e293b] text-xs sm:text-sm">
+                            <!-- JS ile doldurulur -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="px-5 sm:px-6 py-3.5 border-t border-[#1e293b] bg-[#090d16]/80 flex flex-wrap items-center justify-between gap-2">
+                <span class="text-[11px] text-slate-400">* Skorlar tarayıcı hafızasında güvenle saklanır.</span>
+                <div class="flex items-center gap-2">
+                    <button onclick="promptUserBeforeExam('karma'); closeLeaderboardModal();" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition">
+                        🎯 Karma Deneme Çöz
+                    </button>
+                    <button onclick="closeLeaderboardModal()" class="px-4 py-2 rounded-xl bg-[#1e293b] hover:bg-slate-700 text-slate-200 text-xs font-semibold transition">
+                        Kapat
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DERS NOTU OKUYUCU MODALI -->
+    <div id="noteModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
+        <div class="bg-[#111827] w-full max-w-3xl rounded-2xl shadow-2xl border border-[#1e293b] flex flex-col max-h-[92vh] overflow-hidden">
+            <div class="px-5 py-4 border-b border-[#1e293b] flex items-center justify-between gap-3 bg-[#090d16]/70">
+                <div class="min-w-0">
+                    <span id="noteBreadcrumb" class="text-xs font-semibold uppercase tracking-wider text-indigo-400 block truncate">Kategori • Ders</span>
+                    <h2 id="noteTitle" class="font-display font-bold text-lg sm:text-xl text-[#f1f5f9] truncate">Ders Notu Başlığı</h2>
+                </div>
+                <div class="flex items-center gap-1.5 shrink-0">
+                    <button onclick="changeFontSize(-1)" class="w-8 h-8 rounded-lg bg-[#1e293b] border border-slate-700 text-xs font-bold hover:bg-slate-700 transition">A-</button>
+                    <button onclick="changeFontSize(1)" class="w-8 h-8 rounded-lg bg-[#1e293b] border border-slate-700 text-xs font-bold hover:bg-slate-700 transition">A+</button>
+                    <button onclick="closeNoteModal()" class="ml-1 w-9 h-9 rounded-xl bg-[#1e293b] hover:bg-rose-950/60 hover:text-rose-400 flex items-center justify-center font-bold transition">✕</button>
+                </div>
+            </div>
+            <div id="noteContentBody" class="p-5 sm:p-8 overflow-y-auto prose-academic text-slate-300 text-base"></div>
+            <div class="px-5 py-3.5 border-t border-[#1e293b] bg-[#090d16]/70 flex flex-wrap items-center justify-between gap-3">
+                <button id="markReadBtn" onclick="toggleReadStatus()" class="px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 transition shadow-sm"></button>
+                <button onclick="closeNoteModal()" class="px-4 py-2 rounded-xl bg-[#1e293b] hover:bg-slate-700 text-slate-200 text-sm font-medium transition">Kapat</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- KONU TESTİ MODALI -->
+    <div id="quizModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
+        <div class="bg-[#111827] w-full max-w-2xl rounded-2xl shadow-2xl border border-[#1e293b] flex flex-col max-h-[92vh] overflow-hidden">
+            <div class="px-5 py-4 border-b border-[#1e293b] flex items-center justify-between gap-3 bg-[#090d16]/70">
+                <div class="min-w-0">
+                    <span id="quizBreadcrumb" class="text-xs font-semibold uppercase tracking-wider text-indigo-400 block truncate">Ders Adı</span>
+                    <h2 id="quizTitle" class="font-display font-bold text-lg text-[#f1f5f9] truncate">Test Başlığı</h2>
+                </div>
+                <button onclick="closeQuizModal()" class="w-9 h-9 rounded-xl bg-[#1e293b] hover:bg-rose-950/60 hover:text-rose-400 flex items-center justify-center font-bold transition shrink-0">✕</button>
+            </div>
+            <div class="w-full bg-[#090d16] h-1.5">
+                <div id="quizProgressBar" class="bg-indigo-500 h-1.5 transition-all duration-300" style="width: 0%"></div>
+            </div>
+            <div id="quizBody" class="p-5 sm:p-7 overflow-y-auto flex-1"></div>
+            <div id="quizFooter" class="px-5 py-3.5 border-t border-[#1e293b] bg-[#090d16]/70 flex items-center justify-between">
+                <span id="quizCounterText" class="text-xs sm:text-sm font-semibold text-slate-400">Soru 1 / 5</span>
+                <button id="nextQuestionBtn" onclick="nextQuestion()" class="hidden px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold shadow-sm transition flex items-center gap-1.5">
+                    <span>Sonraki Soru</span>
+                    <span>→</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- İÇERİK EKLEME REHBERİ MODALI -->
+    <div id="helpModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+        <div class="bg-[#111827] w-full max-w-2xl rounded-2xl shadow-2xl border border-[#1e293b] overflow-hidden max-h-[90vh] flex flex-col">
+            <div class="px-5 py-4 border-b border-[#1e293b] flex items-center justify-between">
+                <h3 class="font-display font-bold text-lg text-[#f1f5f9] flex items-center gap-2">
+                    <span>🛠️</span> Soru ve Ders Notu Yükleme Rehberi
+                </h3>
+                <button onclick="closeHelpModal()" class="w-8 h-8 rounded-lg bg-[#1e293b] hover:bg-slate-700 flex items-center justify-center font-bold">✕</button>
+            </div>
+            <div class="p-5 sm:p-6 overflow-y-auto space-y-4 text-sm text-slate-300 leading-relaxed">
+                <p>Bu portal tamamen statik ve tek dosyalı (<code class="text-indigo-400">index.html</code>) bir mimariye sahiptir. Dosyayı bilgisayarına kaydedip kendi sorularını ekleyebilir ve Neocities üzerinde ücretsiz yayınlayabilirsin.</p>
+                <div class="bg-[#090d16] p-4 rounded-xl border border-[#1e293b] space-y-2">
+                    <h4 class="font-bold text-[#f1f5f9]">1. 100 Soruluk Deneme Havuzuna Soru Ekleme</h4>
+                    <p class="text-xs sm:text-sm text-slate-400">Kod içerisindeki <code class="text-amber-300">DENEME_HAVUZLARI</code> bölümünde <strong>PAEM (5×20=100)</strong>, <strong>Yüksek Lisans (5×20=100)</strong> ve <strong>Karma (10×10=100)</strong> ders listeleri bulunur. İlgili dersin <code class="text-emerald-400">sorular: [...]</code> dizisine kendi sorularını yapıştırman yeterlidir.</p>
+                </div>
+                <div class="bg-[#090d16] p-4 rounded-xl border border-[#1e293b] space-y-2">
+                    <h4 class="font-bold text-[#f1f5f9]">2. Ders Notları ve Konu Testleri Ekleme</h4>
+                    <p class="text-xs sm:text-sm text-slate-400"><code class="text-amber-300">PORTAL_DATA</code> dizisi içindeki her dersin <code class="text-emerald-400">notes</code> ve <code class="text-emerald-400">quizzes</code> alanlarına yeni özetler ve çoktan seçmeli sorular ekleyebilirsin.</p>
+                </div>
+            </div>
+            <div class="px-5 py-3 border-t border-[#1e293b] text-right">
+                <button onclick="closeHelpModal()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold transition">Anladım</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SORU DAĞILIM TABLOSU MODALI -->
+    <div id="distributionModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+        <div class="bg-[#111827] w-full max-w-2xl rounded-2xl shadow-2xl border border-[#1e293b] overflow-hidden max-h-[90vh] flex flex-col">
+            <div class="px-5 py-4 border-b border-[#1e293b] flex items-center justify-between bg-[#090d16]/70">
+                <div>
+                    <h3 id="distModalTitle" class="font-display font-bold text-lg text-[#f1f5f9] flex items-center gap-2">
+                        <span>📊</span> Soru Dağılım Tablosu
+                    </h3>
+                    <p id="distModalSubtitle" class="text-xs text-slate-400">100 soruluk eşit dağılım planı</p>
+                </div>
+                <button onclick="closeDistributionModal()" class="w-8 h-8 rounded-lg bg-[#1e293b] hover:bg-slate-700 flex items-center justify-center font-bold">✕</button>
+            </div>
+            <div class="px-5 pt-3.5 pb-2 border-b border-[#1e293b] bg-[#090d16]/40 flex flex-wrap gap-2">
+                <button id="distTab-paem" onclick="renderDistributionContent('paem')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition">👮‍♂️ PAEM (5×20)</button>
+                <button id="distTab-yuksekLisans" onclick="renderDistributionContent('yuksekLisans')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition">📚 Yüksek Lisans (5×20)</button>
+                <button id="distTab-karma" onclick="renderDistributionContent('karma')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition">🎯 Karma (10×10)</button>
+            </div>
+            <div id="distributionTableContainer" class="p-5 overflow-y-auto space-y-2.5"></div>
+            <div class="px-5 py-3.5 border-t border-[#1e293b] bg-[#090d16]/70 flex items-center justify-between">
+                <span class="text-xs text-slate-400">Toplam 100 Soru • Eşit Dağılım</span>
+                <button id="distStartExamBtn" onclick="startSelectedDistExam()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-semibold transition">Denemeyi Başlat →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 100 SORULUK DENEME SINAVI ÇALIŞMA ALANI MODALI -->
+    <div id="mockExamModal" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-md flex items-center justify-center p-1.5 sm:p-4 overflow-y-auto">
+        <div class="bg-[#111827] w-full max-w-6xl rounded-2xl shadow-2xl border border-[#1e293b] flex flex-col max-h-[95vh] overflow-hidden">
+            <!-- Sınav Üst Barı -->
+            <div class="px-4 sm:px-6 py-3.5 border-b border-[#1e293b] bg-[#090d16] flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0">
+                    <div id="mockHeaderIcon" class="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-lg shrink-0">🎯</div>
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-2">
+                            <h2 id="mockHeaderTitle" class="font-display font-bold text-sm sm:text-lg text-[#f1f5f9] truncate">100 Soruluk Deneme</h2>
+                            <span id="mockCandidateBadge" class="px-2.5 py-0.5 rounded-full bg-indigo-950 border border-indigo-800 text-indigo-300 text-[11px] font-bold truncate max-w-[140px]">👤 Aday</span>
+                        </div>
+                        <p id="mockHeaderSubtitle" class="text-[11px] sm:text-xs text-slate-400 truncate">100 Soru / 100 Dakika</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+                    <div class="flex items-center bg-[#1e293b] p-1 rounded-xl text-xs font-semibold">
+                        <button id="modeExamBtn" onclick="setMockMode('exam')" class="px-2.5 py-1 rounded-lg bg-[#090d16] text-indigo-300 shadow-sm transition">Sınav Modu</button>
+                        <button id="modePracticeBtn" onclick="setMockMode('practice')" class="px-2.5 py-1 rounded-lg text-slate-400 transition">Anında Kontrol</button>
+                    </div>
+
+                    <div id="timerBox" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-950/50 border border-amber-700/50 text-amber-300 font-mono text-xs sm:text-sm font-bold">
+                        <span>⏱️</span>
+                        <span id="mockTimerText">100:00</span>
+                        <button onclick="toggleMockTimer()" id="timerPauseBtn" class="ml-1 text-[11px] underline opacity-80">Duraklat</button>
+                    </div>
+
+                    <button id="finishMockBtn" onclick="finishMockExam()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-bold shadow-sm transition">Sınavı Bitir ✓</button>
+                    <button onclick="closeMockExamModal()" class="px-3 py-2 rounded-xl bg-[#1e293b] hover:bg-rose-950/70 hover:text-rose-400 text-slate-200 text-xs font-bold transition">← Çıkış</button>
+                </div>
+            </div>
+
+            <!-- Soru + Optik Palet -->
+            <div id="mockExamWorkspace" class="flex-1 overflow-y-auto grid grid-cols-1 lg:grid-cols-12">
+                <div class="lg:col-span-7 p-4 sm:p-6 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#1e293b]">
+                    <div id="mockQuestionArea" class="space-y-4"></div>
+                    <div class="pt-6 mt-6 border-t border-[#1e293b] flex flex-wrap items-center justify-between gap-2">
+                        <button onclick="navigateMock(-1)" id="mockPrevBtn" class="px-4 py-2.5 rounded-xl bg-[#1e293b] hover:bg-slate-700 text-xs sm:text-sm font-semibold transition disabled:opacity-40">← Önceki</button>
+                        <button onclick="clearCurrentMockAnswer()" id="mockClearAnsBtn" class="px-3.5 py-2 rounded-xl border border-slate-700 hover:bg-[#1e293b] text-xs font-semibold text-slate-300 transition">Boş Bırak</button>
+                        <button onclick="navigateMock(1)" id="mockNextBtn" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-semibold transition disabled:opacity-40">Sonraki →</button>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 p-4 sm:p-5 bg-[#090d16]/60 flex flex-col">
+                    <div class="flex items-center justify-between gap-2 mb-3">
+                        <h3 class="font-display font-bold text-sm text-slate-200">📋 Optik Cevap Anahtarı</h3>
+                        <span id="mockAnsweredSummary" class="text-xs font-semibold text-indigo-400">0 / 100 İşaretli</span>
+                    </div>
+                    <div class="mb-3">
+                        <select id="subjectJumpSelect" onchange="jumpToSubjectStart(this.value)" class="w-full px-3 py-2 rounded-xl bg-[#111827] border border-[#1e293b] text-xs font-medium text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="">Ders Başlangıcına Git...</option>
+                        </select>
+                    </div>
+                    <div id="mockOptikGrid" class="optik-scroll grid grid-cols-10 gap-1.5 overflow-y-auto max-h-[300px] lg:max-h-[390px] p-1"></div>
+                </div>
+            </div>
+
+            <!-- Sınav Sonuç Karnesi & Sıralama Özeti -->
+            <div id="mockResultScreen" class="hidden flex-1 overflow-y-auto p-5 sm:p-8 space-y-6"></div>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * ============================================================================
+         * 1. DENEME SINAVLARI HAVUZU (Kendi sorularınızı ilgili dersin 'sorular' dizisine ekleyin)
+         * ============================================================================
+         */
+        const DENEME_HAVUZLARI = {
+            paem: {
+                key: "paem",
+                title: "👮‍♂️ PAEM 100 Soruluk Deneme",
+                shortTitle: "PAEM Denemesi",
+                icon: "👮‍♂️",
+                subtitle: "5 PAEM Dersinden Eşit Dağılım (5 × 20 = 100 Soru)",
+                courses: [
+                    { id: "paem_kolluk", title: "Kolluk Hukuku", category: "PAEM", icon: "👮", quota: 20, sorular: [
+                        { question: "2559 sayılı PVSK m. 4/A uyarınca polisin kişileri ve araçları durdurma yetkisini kullanabilmesi için aşağıdakilerden hangisi gereklidir?", options: ["Makul sebep", "Hakim kararı", "Yazılı ihbar", "Cumhuriyet savcısı emri", "Valilik oluru"], correctIndex: 0, explanation: "PVSK m. 4/A uyarınca durdurma yetkisi için polisin tecrübesine ve içinde bulunulan durumdan edindiği izlenime dayanan makul bir sebebin bulunması gerekir." }
+                    ]},
+                    { id: "paem_amirlik", title: "Amirlik Uygulamaları", category: "PAEM", icon: "📋", quota: 20, sorular: [
+                        { question: "7068 sayılı Genel Kolluk Disiplin Hükümleri Hakkında Kanun'a göre aşağıdakilerden hangisi disiplin cezaları arasında yer almaz?", options: ["Adli para cezası", "Uyarma", "Kınama", "Aylıktan kesme", "Uzun süreli durdurma"], correctIndex: 0, explanation: "Adli para cezası mahkemelerce verilen adli bir yaptırımdır; 7068 sayılı Kanunda yer alan idari disiplin cezalarından değildir." }
+                    ]},
+                    { id: "paem_pmyt", title: "PMYT", category: "PAEM", icon: "💻", quota: 20, sorular: [
+                        { question: "Yakalama, Gözaltına Alma ve İfade Alma Yönetmeliği'ne göre gözaltına alınan kişinin nezarethaneye konulmadan önce zorunlu olarak yapılması gereken işlem nedir?", options: ["Hekim kontrolünden geçirilerek sağlık raporu alınması", "Sulh ceza hakimliğine sevk", "Basına bilgi verilmesi", "Ailesine tebligat gönderilmesi", "Sorgu tutanağı düzenlenmesi"], correctIndex: 0, explanation: "Gözaltına alınan kişinin nezarethaneye girişinde ve çıkışında hekim raporu alınması yasal zorunluluktur." }
+                    ]},
+                    { id: "paem_ingilizce", title: "Mesleki İngilizce", category: "PAEM", icon: "🌐", quota: 20, sorular: [
+                        { question: "Interpol tarafından ağır suçlardan aranan şahısların yakalanması ve iadesi amacıyla çıkarılan uluslararası bülten türü hangisidir?", options: ["Red Notice", "Blue Notice", "Green Notice", "Yellow Notice", "Black Notice"], correctIndex: 0, explanation: "Red Notice (Kırmızı Bülten) uluslararası düzeyde aranan şahısların yakalanması talebidir." }
+                    ]},
+                    { id: "paem_silah", title: "Silah Bilgisi ve Taktik Atış", category: "PAEM", icon: "🎯", quota: 20, sorular: [
+                        { question: "Yivli tabancalarda namlu içindeki yiv ve setlerin temel görevi aşağıdakilerden hangisidir?", options: ["Mermi çekirdeğine kendi ekseni etrafında dönme hareketi vererek menzil ve isabeti artırmak", "Namlu ısısını düşürmek", "Ateşleme iğnesini kurmak", "Boş kovanı dışarı atmak", "Namlu sesini tamamen kesmek"], correctIndex: 0, explanation: "Yiv ve setler çekirdeğe rotasyon (dönme) kazandırarak havada takla atmasını önler ve isabet hassasiyetini artırır." }
+                    ]}
+                ]
+            },
+            yuksekLisans: {
+                key: "yuksekLisans",
+                title: "📚 Yüksek Lisans 100 Soruluk Deneme",
+                shortTitle: "Yüksek Lisans Denemesi",
+                icon: "📚",
+                subtitle: "5 Yüksek Lisans Dersinden Eşit Dağılım (5 × 20 = 100 Soru)",
+                courses: [
+                    { id: "yl_kamu", title: "Kamu Yönetimi", category: "Yüksek Lisans", icon: "🏛️", quota: 20, sorular: [
+                        { question: "1887 yılında yayımladığı 'İdarenin İncelenmesi' adlı makalesiyle Kamu Yönetimi disiplininin kurucusu kabul edilen düşünür kimdir?", options: ["Woodrow Wilson", "Max Weber", "Henri Fayol", "Frederick Taylor", "Dwight Waldo"], correctIndex: 0, explanation: "Woodrow Wilson siyaset-yönetim ayrımını ortaya koyarak modern kamu yönetimi biliminin öncüsü olmuştur." }
+                    ]},
+                    { id: "yl_ceza", title: "Ceza Hukuku Genel Hükümler", category: "Yüksek Lisans", icon: "⚖️", quota: 20, sorular: [
+                        { question: "5237 sayılı Türk Ceza Kanunu'nda 'olası kast' hangi madde kapsamında düzenlenmiştir?", options: ["TCK m. 21/2", "TCK m. 22/3", "TCK m. 25/1", "TCK m. 30/1", "TCK m. 37/1"], correctIndex: 0, explanation: "Kişinin suçun kanuni tanımındaki unsurların gerçekleşebileceğini öngörmesine rağmen fiili işlemesi hali olan olası kast TCK m. 21/2'de yer alır." }
+                    ]},
+                    { id: "yl_anayasa", title: "Anayasal Düzen ve İdari Yapı", category: "Yüksek Lisans", icon: "🏛️", quota: 20, sorular: [
+                        { question: "Merkezi idarenin, mahalli idareler ve hizmet yerinden yönetim kuruluşları üzerinde sahip olduğu istisnai denetim yetkisi nedir?", options: ["İdari Vesayet", "Hiyerarşi", "Yetki Genişliği", "İmza Devri", "Vekalet"], correctIndex: 0, explanation: "İdari bütünlüğü sağlamak amacıyla merkezi idarenin yerinden yönetim kuruluşları üzerindeki kanunla sınırlı denetimi idari vesayettir." }
+                    ]},
+                    { id: "yl_etik", title: "Polislik Kültürü ve Etik", category: "Yüksek Lisans", icon: "🛡️", quota: 20, sorular: [
+                        { question: "Avrupa Polis Etiği Kuralları'na göre kolluk görevlilerinin zor kullanma yetkisini kullanırken uyması gereken temel ilke hangisidir?", options: ["Kesin zorunluluk ve orantılılık", "Sınırsız takdir yetkisi", "Öncelikli silah kullanımı", "İdari izin bekleme", "Gönüllülük"], correctIndex: 0, explanation: "Kolluk zor kullanırken yalnızca kesin zorunluluk halinde ve ulaşılmak istenen meşru amaçla orantılı hareket etmelidir." }
+                    ]},
+                    { id: "yl_metot", title: "Bilimsel Araştırma Yöntemleri", category: "Yüksek Lisans", icon: "📊", quota: 20, sorular: [
+                        { question: "Bir ölçme aracının aynı koşullar altında tekrarlanan ölçümlerde benzer ve kararlı sonuçlar vermesi hangi kavramla ifade edilir?", options: ["Güvenirlik", "Geçerlik", "Kullanışlılık", "Örneklem", "Hipotez"], correctIndex: 0, explanation: "Güvenirlik, ölçme aracının tutarlılık ve kararlılık derecesini ifade eder." }
+                    ]}
+                ]
+            },
+            karma: {
+                key: "karma",
+                title: "🎯 Genel Karma 100 Soruluk Deneme",
+                shortTitle: "Karma Deneme",
+                icon: "🎯",
+                subtitle: "Tüm 10 Dersten Eşit Dağılım (10 Ders × 10 Soru = 100 Soru)",
+                courses: [
+                    { id: "k_kolluk", title: "Kolluk Hukuku", category: "PAEM", icon: "👮", quota: 10, sorular: [
+                        { question: "PVSK m. 4/A uyarınca polisin durdurma yetkisi için aranan temel şart nedir?", options: ["Makul sebep", "Hakim kararı", "İhbar", "Savcı talimatı", "Valilik oluru"], correctIndex: 0, explanation: "Makul sebep bulunması şarttır." }
+                    ]},
+                    { id: "k_amirlik", title: "Amirlik Uygulamaları", category: "PAEM", icon: "📋", quota: 10, sorular: [
+                        { question: "7068 sayılı Kanun uyarınca aşağıdakilerden hangisi disiplin cezası değildir?", options: ["Adli para cezası", "Uyarma", "Kınama", "Aylıktan kesme", "Meslekten çıkarma"], correctIndex: 0, explanation: "Adli para cezası adli yaptırımdır." }
+                    ]},
+                    { id: "k_pmyt", title: "PMYT", category: "PAEM", icon: "💻", quota: 10, sorular: [
+                        { question: "Gözaltına alınan şahsın nezarethaneye girişinde zorunlu olan işlem hangisidir?", options: ["Hekim kontrolü ve sağlık raporu", "Basın açıklaması", "İfade tutanağı", "Mahkeme sevki", "Muhtar bildirimi"], correctIndex: 0, explanation: "Sağlık raporu alınması zorunludur." }
+                    ]},
+                    { id: "k_ingilizce", title: "Mesleki İngilizce", category: "PAEM", icon: "🌐", quota: 10, sorular: [
+                        { question: "İngilizce kolluk terminolojisinde 'Search Warrant' ne anlama gelir?", options: ["Arama Emri", "Yakalama Emri", "Gözaltı Süresi", "Tanık İfadesi", "Olay Yeri İnceleme"], correctIndex: 0, explanation: "Search Warrant, mahkemece verilen arama emridir." }
+                    ]},
+                    { id: "k_silah", title: "Silah Bilgisi ve Taktik Atış", category: "PAEM", icon: "🎯", quota: 10, sorular: [
+                        { question: "Tabancalarda yiv ve setlerin temel işlevi nedir?", options: ["Çekirdeğe dönme hareketi vererek isabet ve menzili artırmak", "Silahı hafifletmek", "Tetik ağırlığını azaltmak", "Kovanı soğutmak", "Emniyeti kilitlemek"], correctIndex: 0, explanation: "Yiv ve setler çekirdeğe rotasyon sağlar." }
+                    ]},
+                    { id: "k_kamu", title: "Kamu Yönetimi", category: "Yüksek Lisans", icon: "🏛️", quota: 10, sorular: [
+                        { question: "Kamu yönetimi disiplininin kurucusu kabul edilen düşünür kimdir?", options: ["Woodrow Wilson", "Max Weber", "Henri Fayol", "Frederick Taylor", "Herbert Simon"], correctIndex: 0, explanation: "Woodrow Wilson." }
+                    ]},
+                    { id: "k_ceza", title: "Ceza Hukuku Genel Hükümler", category: "Yüksek Lisans", icon: "⚖️", quota: 10, sorular: [
+                        { question: "TCK'da olası kast hangi maddede düzenlenmiştir?", options: ["m. 21/2", "m. 22/3", "m. 25", "m. 30", "m. 37"], correctIndex: 0, explanation: "TCK m. 21/2." }
+                    ]},
+                    { id: "k_anayasa", title: "Anayasal Düzen ve İdari Yapı", category: "Yüksek Lisans", icon: "🏛️", quota: 10, sorular: [
+                        { question: "Merkezi idarenin yerinden yönetimler üzerindeki denetim yetkisi nedir?", options: ["İdari Vesayet", "Hiyerarşi", "Vekalet", "Yetki Genişliği", "İmza Devri"], correctIndex: 0, explanation: "İdari vesayet." }
+                    ]},
+                    { id: "k_etik", title: "Polislik Kültürü ve Etik", category: "Yüksek Lisans", icon: "🛡️", quota: 10, sorular: [
+                        { question: "Avrupa Polis Etiği Kuralları'na göre zor kullanma nasıl olmalıdır?", options: ["Zorunlu ve orantılı", "Sınırsız", "Keyfi", "Sadece adli", "Gönüllü"], correctIndex: 0, explanation: "Orantılılık esastır." }
+                    ]},
+                    { id: "k_metot", title: "Bilimsel Araştırma Yöntemleri", category: "Yüksek Lisans", icon: "📊", quota: 10, sorular: [
+                        { question: "Ölçüm aracının tutarlı ve kararlı sonuçlar vermesi neyi ifade eder?", options: ["Güvenirlik", "Geçerlik", "Kullanışlılık", "Nesnellik", "Hipotez"], correctIndex: 0, explanation: "Güvenirlik." }
+                    ]}
+                ]
+            }
+        };
+
+        /**
+         * ============================================================================
+         * 2. DERS NOTLARI VE KONU TESTLERİ VERİ TABANI
+         * ============================================================================
+         */
+        const PORTAL_DATA = [
+            {
+                id: "paem-dersleri",
+                title: "PAEM Dersleri",
+                icon: "👮‍♂️",
+                description: "Polis Amirleri Eğitimi Merkezi mesleki mevzuat, pratik ve atış dersleri",
+                categoryExamBanner: {
+                    examType: "paem",
+                    title: "👮‍♂️ PAEM 100 Soruluk Deneme Sınavı",
+                    subtitle: "5 PAEM dersinden eşit dağılımlı (5 × 20 = 100 soru) özel deneme sınavı",
+                    distributionText: "Kolluk Hukuku (20) • Amirlik Uygulamaları (20) • PMYT (20) • Mesleki İngilizce (20) • Silah Bilgisi (20)"
+                },
+                courses: [
+                    {
+                        id: "paem-kolluk-hukuku",
+                        title: "Kolluk Hukuku",
+                        icon: "👮",
+                        notes: [
+                            { id: "k-1", title: "1. Not: İdari ve Adli Kolluk Ayrımı", subtitle: "PVSK ve CMK Kapsamında Görev ve Yetkiler", content: `<h3>1. İdari Kolluk ve Adli Kolluk</h3><p><strong>İdari kolluk</strong>, kamu düzenini (güvenlik, dirlik-esenlik, genel sağlık) korumaya yönelik suç öncesi önleyici faaliyetleri yürütür. <strong>Adli kolluk</strong> ise suç işlendikten sonra Cumhuriyet savcısının emri doğrultusunda delil toplama ve soruşturma işlemlerini yürütür.</p><ul><li>Durdurma ve kimlik sorma (PVSK m. 4/A) önleyici niteliktedir ve makul sebep gerektirir.</li><li>Önleme araması için hakim kararı, gecikmesinde sakınca bulunan hallerde mülki amirin yazılı emri gerekir.</li></ul>` }
+                        ],
+                        quizzes: [
+                            { id: "kq-1", title: "Kolluk Hukuku Konu Testi", subtitle: "PVSK ve Yetkiler", questions: [
+                                { question: "PVSK m. 4/A durdurma yetkisi neye dayanır?", options: ["Makul sebep", "Hakim kararı", "İhbar", "Savcı", "Vali"], correctIndex: 0, explanation: "Makul sebep aranır." }
+                            ]}
+                        ]
+                    },
+                    {
+                        id: "paem-amirlik-uygulamalari",
+                        title: "Amirlik Uygulamaları",
+                        icon: "📋",
+                        notes: [
+                            { id: "a-1", title: "1. Not: Sevk, İdare ve Disiplin Mevzuatı", subtitle: "7068 Sayılı Genel Kolluk Disiplin Hükümleri", content: `<h3>1. Disiplin Amirliği ve Cezalar</h3><p>7068 sayılı Kanun kapsamında emniyet teşkilatı personeline verilebilecek disiplin cezaları: Uyarma, Kınama, Aylıktan Kesme, Kısa Süreli Durdurma, Uzun Süreli Durdurma, Meslekten Çıkarma ve Devlet Memurluğundan Çıkarma olarak sıralanır.</p>` }
+                        ],
+                        quizzes: [
+                            { id: "aq-1", title: "Amirlik Uygulamaları Konu Testi", subtitle: "Disiplin Mevzuatı", questions: [
+                                { question: "Hangisi 7068 sayılı Kanun disiplin cezası değildir?", options: ["Adli para cezası", "Uyarma", "Kınama", "Aylıktan kesme", "Meslekten çıkarma"], correctIndex: 0, explanation: "Adli para cezası disiplin cezası değildir." }
+                            ]}
+                        ]
+                    },
+                    {
+                        id: "paem-pmyt",
+                        title: "PMYT (Polis Merkezi Yönetimi)",
+                        icon: "💻",
+                        notes: [
+                            { id: "p-1", title: "1. Not: Polis Merkezi Amirlikleri İşlemleri", subtitle: "Müracaat, Gözaltı ve Nezarethane Standartları", content: `<h3>1. Gözaltı ve Nezarethane Süreçleri</h3><p>Yakalanan ve gözaltına alınan şahısların hakları bildirilir, yakınlarına haber verilir ve nezarethaneye alınmadan önce mutlaka hekim muayenesinden geçirilerek sağlık raporu tanzim edilir.</p>` }
+                        ],
+                        quizzes: [
+                            { id: "pq-1", title: "PMYT Konu Testi", subtitle: "Nezarethane ve Gözaltı", questions: [
+                                { question: "Gözaltına alınan kişinin nezarethaneye konulmadan önceki ilk zorunlu işlemi nedir?", options: ["Sağlık kontrolü ve rapor alınması", "İfade alınması", "Mahkemeye sevk", "Basın açıklaması", "Parmak izi silme"], correctIndex: 0, explanation: "Sağlık raporu alınmalıdır." }
+                            ]}
+                        ]
+                    },
+                    {
+                        id: "paem-mesleki-ingilizce",
+                        title: "Mesleki İngilizce",
+                        icon: "🌐",
+                        notes: [
+                            { id: "mi-1", title: "1. Not: Law Enforcement Terminology", subtitle: "Uluslararası Kolluk ve Adli Terminoloji", content: `<h3>1. Temel Kolluk Terimleri</h3><ul><li><strong>Suspect:</strong> Şüpheli</li><li><strong>Witness:</strong> Tanık</li><li><strong>Evidence:</strong> Delil / Kanıt</li><li><strong>Search Warrant:</strong> Arama Emri</li><li><strong>Arrest Warrant:</strong> Yakalama / Tutuklama Emri</li><li><strong>Interrogation:</strong> Sorgulama</li></ul>` }
+                        ],
+                        quizzes: [
+                            { id: "miq-1", title: "Mesleki İngilizce Konu Testi", subtitle: "Police Terms Quiz", questions: [
+                                { question: "What is the English term for 'Arama Emri' issued by a court?", options: ["Search Warrant", "Arrest Warrant", "Subpoena", "Indictment", "Bail"], correctIndex: 0, explanation: "Search warrant means court-issued search order." }
+                            ]}
+                        ]
+                    },
+                    {
+                        id: "paem-silah-bilgisi",
+                        title: "Silah Bilgisi ve Taktik Atış",
+                        icon: "🎯",
+                        notes: [
+                            { id: "sb-1", title: "1. Not: Tabanca Mekaniği ve Emniyet Kuralları", subtitle: "4 Temel Silah Güvenlik Kuralı ve Balistik", content: `<h3>1. Silah Güvenliğinin 4 Altın Kuralı</h3><ul><li>Her silahı her zaman dolu kabul et.</li><li>Namluyu asla vurmak istemediğin bir hedefe doğrultma.</li><li>Hedef ve arkasından emin olmadan parmağını tetik korkuluğu içine sokma.</li><li>Atış yapacağın hedefi ve çevresini net olarak teşhis et.</li></ul>` }
+                        ],
+                        quizzes: [
+                            { id: "sbq-1", title: "Silah Bilgisi Konu Testi", subtitle: "Mekanik ve Balistik", questions: [
+                                { question: "Tabancalarda namlu içindeki yiv ve setlerin temel işlevi nedir?", options: ["Mermiye dönme hareketi vererek menzil ve isabet artırmak", "Silahı soğutmak", "Ateşlemeyi geciktirmek", "Geri tepmeyi tamamen yok etmek", "Kovanı saklamak"], correctIndex: 0, explanation: "Yiv ve setler merminin dönerek istikrarlı gitmesini sağlar." }
+                            ]}
+                        ]
+                    }
+                ]
+            },
+            {
+                id: "yl-dersleri",
+                title: "Yüksek Lisans Dersleri",
+                icon: "📚",
+                description: "Lisansüstü eğitim programı ders notları ve konu testleri",
+                categoryExamBanner: {
+                    examType: "yuksekLisans",
+                    title: "📚 Yüksek Lisans 100 Soruluk Deneme Sınavı",
+                    subtitle: "5 Yüksek Lisans dersinden eşit dağılımlı (5 × 20 = 100 soru) özel deneme sınavı",
+                    distributionText: "Kamu Yönetimi (20) • Ceza Hukuku (20) • Anayasal Düzen (20) • Polislik Etiği (20) • Bilimsel Araştırma (20)"
+                },
+                courses: [
+                    {
+                        id: "yl-kamu-yonetimi",
+                        title: "Kamu Yönetimi",
+                        icon: "🏛️",
+                        notes: [
+                            { id: "ylk-1", title: "1. Not: Klasik Kamu Yönetimi ve Bürokrasi", subtitle: "Wilson, Weber ve Yeni Kamu İşletmeciliği", content: `<h3>1. Siyaset-Yönetim Ayrımı ve Bürokrasi</h3><p>Woodrow Wilson siyasetin karar alma, yönetimin ise uygulama alanı olduğunu savunmuştur. Max Weber ise ideal tip bürokrasi modelinde iş bölümü, hiyerarşi, yazılı kurallar ve liyakat ilkelerini öne çıkarmıştır.</p>` }
+                        ],
+                        quizzes: [
+                            { id: "ylkq-1", title: "Kamu Yönetimi Konu Testi", subtitle: "Kuramlar ve Bürokrasi", questions: [
+                                { question: "Kamu yönetimi disiplininin kurucusu kimdir?", options: ["Woodrow Wilson", "Max Weber", "Henri Fayol", "Frederick Taylor", "Dwight Waldo"], correctIndex: 0, explanation: "Woodrow Wilson." }
+                            ]}
+                        ]
+                    },
+                    {
+                        id: "yl-ceza-hukuku",
+                        title: "Ceza Hukuku Genel Hükümler",
+                        icon: "⚖️",
+                        notes: [
+                            { id: "ylc-1", title: "1. Not: Suçun Manevi Unsurları (Kast ve Taksir)", subtitle: "Doğrudan Kast, Olası Kast ve Bilinçli Taksir", content: `<h3>1. Kast ve Taksir Ayrımı</h3><p><strong>Olası kastta</strong> fail neticeyi öngörür ve 'olursa olsun' diyerek kabullenir. <strong>Bilinçli taksirde</strong> ise fail neticeyi öngörür ancak kendi yeteneklerine veya şansına güvenerek neticenin gerçekleşmeyeceğine inanır.</p>` }
+                        ],
+                        quizzes: [
+                            { id: "ylcq-1", title: "Ceza Hukuku Konu Testi", subtitle: "Suçun Unsurları", questions: [
+                                { question: "Olası kast TCK'nın hangi maddesinde düzenlenmiştir?", options: ["TCK m. 21/2", "TCK m. 22/3", "TCK m. 25", "TCK m. 30", "TCK m. 35"], correctIndex: 0, explanation: "TCK m. 21/2." }
+                            ]}
+                        ]
+                    },
+                    {
+                        id: "yl-anayasa-idari",
+                        title: "Anayasal Düzen ve İdari Yapı",
+                        icon: "🏛️",
+                        notes: [
+                            { id: "yla-1", title: "1. Not: İdarenin Bütünlüğü İlkesi", subtitle: "Hiyerarşi ve İdari Vesayet Denetimi", content: `<h3>1. Hiyerarşi ve İdari Vesayet</h3><p><strong>Hiyerarşi</strong> tek bir kamu tüzel kişisi içindeki ast-üst ilişkisini ifade eder ve genel bir yetkidir. <strong>İdari vesayet</strong> ise merkezi idarenin yerinden yönetim kuruluşları üzerindeki kanunla sınırlı istisnai denetim yetkisidir.</p>` }
+                        ],
+                        quizzes: [
+                            { id: "ylaq-1", title: "Anayasa ve İdare Konu Testi", subtitle: "İdari Teşkilat", questions: [
+                                { question: "Yerinden yönetimler üzerindeki merkezi idare denetimi nedir?", options: ["İdari vesayet", "Hiyerarşi", "Vekalet", "Yetki devri", "Emir"], correctIndex: 0, explanation: "İdari vesayet." }
+                            ]}
+                        ]
+                    },
+                    {
+                        id: "yl-polislik-etik",
+                        title: "Polislik Kültürü ve Etik",
+                        icon: "🛡️",
+                        notes: [
+                            { id: "yle-1", title: "1. Not: Demokratik Polislik ve Etik İlkeler", subtitle: "Avrupa Polis Etiği Kuralları", content: `<h3>1. Demokratik Kolluk İlkeleri</h3><p>Hukukun üstünlüğü, insan haklarına saygı, ayrımcılık yasağı, hesap verebilirlik ve orantılı güç kullanımı modern polislik etiğinin temel taşlarıdır.</p>` }
+                        ],
+                        quizzes: [
+                            { id: "yleq-1", title: "Polislik Etiği Konu Testi", subtitle: "Etik İlkeler", questions: [
+                                { question: "Zor kullanmada temel kıstas nedir?", options: ["Orantılılık ve zorunluluk", "Keyfilik", "Sınırsızlık", "Öncelik", "Gönüllülük"], correctIndex: 0, explanation: "Orantılılık esastır." }
+                            ]}
+                        ]
+                    },
+                    {
+                        id: "yl-bilimsel-arastirma",
+                        title: "Bilimsel Araştırma Yöntemleri",
+                        icon: "📊",
+                        notes: [
+                            { id: "ylb-1", title: "1. Not: Nicel ve Nitel Araştırma Desenleri", subtitle: "Geçerlik, Güvenirlik ve Örnekleme", content: `<h3>1. Geçerlik ve Güvenirlik</h3><p><strong>Geçerlik</strong>, bir ölçme aracının ölçmeyi amaçladığı özelliği başka özelliklerle karıştırmadan doğru ölçebilme derecesidir. <strong>Güvenirlik</strong> ise ölçüm sonuçlarının tutarlılığıdır.</p>` }
+                        ],
+                        quizzes: [
+                            { id: "ylbq-1", title: "Bilimsel Araştırma Konu Testi", subtitle: "Araştırma Yöntemleri", questions: [
+                                { question: "Ölçüm aracının tutarlı ve kararlı sonuçlar vermesi nedir?", options: ["Güvenirlik", "Geçerlik", "Evrensellik", "Kullanışlılık", "Örneklem"], correctIndex: 0, explanation: "Güvenirlik." }
+                            ]}
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        // ============================================================================
+        // 3. UYGULAMA DURUM DEĞİŞKENLERİ (STATE)
+        // ============================================================================
+        let readNotes = JSON.parse(localStorage.getItem('academic_portal_read_notes') || '[]');
+        let currentNoteId = null;
+        let currentFontSize = 16;
+        let searchQuery = '';
+        let selectedCategoryId = null;
+
+        // Konu Testi State
+        let activeQuiz = null;
+        let currentQuestionIdx = 0;
+        let quizScore = 0;
+        let hasAnsweredCurrent = false;
+
+        // 100 Soruluk Deneme & Liderlik Tablosu State
+        let pendingExamKeyToStart = 'karma';
+        let currentCandidateName = localStorage.getItem('academic_portal_last_user') || '';
+        let activeMockExamKey = 'karma';
+        let activeMockExamMeta = null;
+        let mockExamQuestions = [];
+        let mockUserAnswers = {};
+        let mockCurrentIdx = 0;
+        let mockSubmitted = false;
+        let mockSecondsLeft = 100 * 60;
+        let mockTimerInterval = null;
+        let mockTimerPaused = false;
+        let mockMode = 'exam';
+        let currentDistModalKey = 'karma';
+        let activeLeaderboardFilter = 'all';
+
+        // Başlangıç Liderlik Tablosu Verileri
+        const DEFAULT_LEADERBOARD = [
+            { id: 'seed-1', name: 'Kom. Yrd. Burak T.', examType: 'karma', examTitle: 'Genel Karma Deneme', correct: 86, wrong: 8, blank: 6, net: 84.00, score: 84.00, date: '15.11.2026' },
+            { id: 'seed-2', name: 'Zeynep Karahan', examType: 'paem', examTitle: 'PAEM Denemesi', correct: 81, wrong: 12, blank: 7, net: 78.00, score: 78.00, date: '16.11.2026' },
+            { id: 'seed-3', name: 'Mehmet Akif S.', examType: 'yuksekLisans', examTitle: 'Yüksek Lisans Denemesi', correct: 76, wrong: 16, blank: 8, net: 72.00, score: 72.00, date: '17.11.2026' },
+            { id: 'seed-4', name: 'Elif Demir', examType: 'karma', examTitle: 'Genel Karma Deneme', correct: 70, wrong: 20, blank: 10, net: 65.00, score: 65.00, date: '18.11.2026' }
+        ];
+
+        function getLeaderboardData() {
+            const saved = localStorage.getItem('academic_portal_leaderboard_v1');
+            if (!saved) {
+                localStorage.setItem('academic_portal_leaderboard_v1', JSON.stringify(DEFAULT_LEADERBOARD));
+                return [...DEFAULT_LEADERBOARD];
+            }
+            try {
+                return JSON.parse(saved);
+            } catch (e) {
+                return [...DEFAULT_LEADERBOARD];
+            }
+        }
+
+        function saveLeaderboardEntry(entry) {
+            const list = getLeaderboardData();
+            list.push(entry);
+            list.sort((a, b) => b.score - a.score || b.net - a.net);
+            localStorage.setItem('academic_portal_leaderboard_v1', JSON.stringify(list));
+            updateLandingLeaderboardPreview();
+            return list;
+        }
+
+        function updateLandingLeaderboardPreview() {
+            const list = getLeaderboardData().sort((a, b) => b.score - a.score);
+            const previewEl = document.getElementById('landingLeaderPreviewText');
+            if (!previewEl) return;
+            if (list.length > 0) {
+                const top = list[0];
+                previewEl.innerHTML = `Lider: <strong class="text-amber-300">🥇 ${escapeHtml(top.name)}</strong> (${top.score.toFixed(2)} Puan • ${top.examTitle}) — Toplam ${list.length} aday sıralamada.`;
+            }
+        }
+
+        function updateReadBadge() {
+            const badgeText = document.getElementById('readCountText');
+            if (badgeText) {
+                badgeText.textContent = `${readNotes.length} Not Okundu`;
+            }
+        }
+
+        // ============================================================================
+        // 4. NAVİGASYON VE ANA EKRAN KONTROLLERİ
+        // ============================================================================
+        function selectCategoryView(categoryId) {
+            selectedCategoryId = categoryId;
+            searchQuery = '';
+            document.getElementById('searchInput').value = '';
+            document.getElementById('subSearchInput').value = '';
+            document.getElementById('clearSearchBtn').classList.add('hidden');
+            document.getElementById('subClearSearchBtn').classList.add('hidden');
+            renderPortal();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderPortal() {
+            const landingView = document.getElementById('landingMenuView');
+            const detailView = document.getElementById('categoryDetailView');
+            const container = document.getElementById('portalContainer');
+            const emptyState = document.getElementById('emptySearchState');
+            const q = searchQuery.trim().toLocaleLowerCase('tr-TR');
+
+            if (!selectedCategoryId && !q) {
+                landingView.classList.remove('hidden');
+                detailView.classList.add('hidden');
+                return;
+            }
+
+            landingView.classList.add('hidden');
+            detailView.classList.remove('hidden');
+            container.innerHTML = '';
+
+            let totalVisibleCourses = 0;
+            const categoriesToRender = selectedCategoryId && !q ? PORTAL_DATA.filter(c => c.id === selectedCategoryId) : PORTAL_DATA;
+
+            categoriesToRender.forEach(category => {
+                const filteredCourses = category.courses.filter(course => {
+                    if (!q) return true;
+                    return course.title.toLocaleLowerCase('tr-TR').includes(q) ||
+                           course.notes.some(n => n.title.toLocaleLowerCase('tr-TR').includes(q) || n.subtitle.toLocaleLowerCase('tr-TR').includes(q));
+                });
+
+                if (filteredCourses.length === 0) return;
+                totalVisibleCourses += filteredCourses.length;
+                const banner = category.categoryExamBanner;
+
+                const catCard = document.createElement('section');
+                catCard.className = 'bg-[#111827] rounded-2xl border border-[#1e293b] shadow-xl shadow-black/25 overflow-hidden';
+                catCard.innerHTML = `
+                    <div class="px-5 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-4 bg-[#090d16]/70 border-b border-[#1e293b]">
+                        <div class="flex items-center gap-3.5">
+                            <span class="text-2xl sm:text-3xl select-none">${category.icon}</span>
+                            <div>
+                                <h2 class="font-display font-extrabold text-lg sm:text-xl text-[#f1f5f9]">${category.title}</h2>
+                                <p class="text-xs sm:text-sm text-slate-400 mt-0.5">${category.description} • <span class="font-semibold text-indigo-400">${filteredCourses.length} Ders</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-3 sm:p-5 space-y-3.5">
+                        ${banner ? `
+                            <div class="rounded-xl p-4 sm:p-5 bg-gradient-to-r from-[#1e293b] via-[#15203b] to-[#1e293b] border border-indigo-500/40 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <div class="space-y-1">
+                                    <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-500/15 border border-indigo-400/30 text-indigo-300 text-[11px] font-bold">
+                                        <span>📝</span><span>ÖZEL 100 SORULUK DENEME (PUAN SIRALAMALI)</span>
+                                    </div>
+                                    <h3 class="font-display font-extrabold text-base sm:text-lg text-[#f1f5f9]">${banner.title}</h3>
+                                    <p class="text-xs text-slate-300">${banner.subtitle}</p>
+                                    <p class="text-[11px] font-semibold text-indigo-300">${banner.distributionText}</p>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-2 shrink-0">
+                                    <button onclick="openDistributionModal('${banner.examType}')" class="px-3.5 py-2.5 rounded-xl bg-[#090d16] hover:bg-slate-900 border border-slate-700 text-xs font-semibold text-slate-200 transition">📊 Dağılım</button>
+                                    <button onclick="promptUserBeforeExam('${banner.examType}')" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-bold shadow-md transition flex items-center gap-1.5"><span>🚀</span><span>Denemeyi Başlat</span></button>
+                                </div>
+                            </div>
+                        ` : ''}
+                        ${filteredCourses.map(course => renderCourseItem(category, course, Boolean(q))).join('')}
+                    </div>
+                `;
+                container.appendChild(catCard);
+            });
+
+            emptySearchState.classList.toggle('hidden', totalVisibleCourses > 0);
+        }
+
+        function renderCourseItem(category, course, forceOpen) {
+            const readCount = course.notes.filter(n => readNotes.includes(n.id)).length;
+            return `
+                <div class="rounded-xl border border-[#1e293b] bg-[#090d16]/50 overflow-hidden">
+                    <button onclick="toggleAccordion('course-body-${course.id}', 'course-chevron-${course.id}')" class="w-full px-4 py-3.5 flex items-center justify-between gap-3 text-left hover:bg-[#1e293b]/50 transition">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <span class="text-xl shrink-0">${course.icon}</span>
+                            <span class="font-display font-bold text-base text-[#f1f5f9] truncate">${course.title}</span>
+                            ${readCount > 0 ? `<span class="hidden sm:inline-flex px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-950 border border-emerald-800/70 text-emerald-300">✓ ${readCount}/${course.notes.length} Okundu</span>` : ''}
+                        </div>
+                        <span id="course-chevron-${course.id}" class="text-xs text-slate-400 transition-transform duration-200 ${forceOpen ? 'rotate-180' : ''}">▼</span>
+                    </button>
+                    <div id="course-body-${course.id}" class="${forceOpen ? 'block' : 'hidden'} px-4 pb-4 pt-3 border-t border-[#1e293b] grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div class="bg-[#111827] rounded-xl p-3.5 border border-[#1e293b]">
+                            <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5 pb-2 border-b border-[#1e293b]"><span>📖</span><span>Ders Notları</span></div>
+                            <div class="space-y-2">
+                                ${course.notes.map(note => {
+                                    const isRead = readNotes.includes(note.id);
+                                    return `
+                                        <button onclick="openNote('${category.id}', '${course.id}', '${note.id}')" class="w-full p-3 rounded-lg text-left border transition flex items-start justify-between gap-2 group ${isRead ? 'bg-emerald-950/30 border-emerald-800/70' : 'bg-[#090d16]/70 hover:bg-indigo-950/40 border-[#1e293b] hover:border-indigo-500/50'}">
+                                            <div class="min-w-0">
+                                                <div class="flex items-center gap-2"><span class="text-sm">📄</span><span class="font-semibold text-sm text-[#f1f5f9]">${note.title}</span></div>
+                                                <p class="text-xs text-slate-400 mt-1 truncate">${note.subtitle}</p>
+                                            </div>
+                                            ${isRead ? '<span class="text-xs font-bold text-emerald-400">✓</span>' : '<span class="text-xs text-slate-400 group-hover:text-indigo-300">Oku →</span>'}
+                                        </button>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                        <div class="bg-[#111827] rounded-xl p-3.5 border border-[#1e293b]">
+                            <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5 pb-2 border-b border-[#1e293b]"><span>❓</span><span>Konu Testleri</span></div>
+                            <div class="space-y-2">
+                                ${course.quizzes.map(quiz => `
+                                    <button onclick="openQuiz('${category.id}', '${course.id}', '${quiz.id}')" class="w-full p-3 rounded-lg text-left bg-[#090d16]/70 hover:bg-amber-950/30 border border-[#1e293b] hover:border-amber-500/50 transition flex items-start justify-between gap-2 group">
+                                        <div class="min-w-0">
+                                            <div class="flex items-center gap-2"><span class="text-sm">📝</span><span class="font-semibold text-sm text-[#f1f5f9]">${quiz.title}</span></div>
+                                            <p class="text-xs text-slate-400 mt-1 truncate">${quiz.subtitle} (${quiz.questions.length} Soru)</p>
+                                        </div>
+                                        <span class="text-xs font-medium text-amber-400 group-hover:translate-x-0.5 transition-transform">Çöz →</span>
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleAccordion(bodyId, chevronId) {
+            const body = document.getElementById(bodyId);
+            const chevron = document.getElementById(chevronId);
+            if (!body) return;
+            body.classList.toggle('hidden');
+            chevron.classList.toggle('rotate-180');
+        }
+
+        function expandAll(open) {
+            document.querySelectorAll('[id^="course-body-"]').forEach(el => el.classList.toggle('hidden', !open));
+            document.querySelectorAll('[id^="course-chevron-"]').forEach(el => el.classList.toggle('rotate-180', open));
+        }
+
+        function handleSearch(val) {
+            searchQuery = val;
+            document.getElementById('searchInput').value = val;
+            document.getElementById('subSearchInput').value = val;
+            const has = val.trim().length > 0;
+            document.getElementById('clearSearchBtn').classList.toggle('hidden', !has);
+            document.getElementById('subClearSearchBtn').classList.toggle('hidden', !has);
+            renderPortal();
+        }
+
+        function clearSearch() {
+            searchQuery = '';
+            document.getElementById('searchInput').value = '';
+            document.getElementById('subSearchInput').value = '';
+            document.getElementById('clearSearchBtn').classList.add('hidden');
+            document.getElementById('subClearSearchBtn').classList.add('hidden');
+            renderPortal();
+        }
+
+        function resetToHome() {
+            selectedCategoryId = null;
+            clearSearch();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ============================================================================
+        // 5. DERS NOTU VE KONU TESTİ İŞLEMLERİ
+        // ============================================================================
+        function openNote(categoryId, courseId, noteId) {
+            const category = PORTAL_DATA.find(c => c.id === categoryId);
+            const course = category?.courses.find(c => c.id === courseId);
+            const note = course?.notes.find(n => n.id === noteId);
+            if (!note) return;
+
+            currentNoteId = note.id;
+            document.getElementById('noteBreadcrumb').textContent = `${category.title} • ${course.title}`;
+            document.getElementById('noteTitle').textContent = note.title;
+            const bodyEl = document.getElementById('noteContentBody');
+            bodyEl.innerHTML = note.content;
+            bodyEl.style.fontSize = `${currentFontSize}px`;
+
+            updateMarkReadButton();
+            document.getElementById('noteModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeNoteModal() {
+            document.getElementById('noteModal').classList.add('hidden');
+            document.body.style.overflow = '';
+            currentNoteId = null;
+        }
+
+        function changeFontSize(delta) {
+            currentFontSize = Math.min(24, Math.max(13, currentFontSize + delta));
+            const bodyEl = document.getElementById('noteContentBody');
+            if (bodyEl) bodyEl.style.fontSize = `${currentFontSize}px`;
+        }
+
+        function updateMarkReadButton() {
+            const btn = document.getElementById('markReadBtn');
+            const isRead = readNotes.includes(currentNoteId);
+            btn.className = isRead ? 'px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 bg-emerald-600 text-white' : 'px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white';
+            btn.innerHTML = isRead ? '<span>✓</span><span>Okundu Olarak İşaretlendi</span>' : '<span>○</span><span>Okundu Olarak İşaretle</span>';
+        }
+
+        function toggleReadStatus() {
+            if (!currentNoteId) return;
+            const idx = readNotes.indexOf(currentNoteId);
+            if (idx > -1) readNotes.splice(idx, 1);
+            else readNotes.push(currentNoteId);
+            localStorage.setItem('academic_portal_read_notes', JSON.stringify(readNotes));
+            updateMarkReadButton();
+            updateReadBadge();
+            renderPortal();
+        }
+
+        function openQuiz(categoryId, courseId, quizId) {
+            const category = PORTAL_DATA.find(c => c.id === categoryId);
+            const course = category?.courses.find(c => c.id === courseId);
+            const quiz = course?.quizzes.find(q => q.id === quizId);
+            if (!quiz) return;
+
+            activeQuiz = quiz;
+            currentQuestionIdx = 0;
+            quizScore = 0;
+            hasAnsweredCurrent = false;
+
+            document.getElementById('quizBreadcrumb').textContent = `${category.title} • ${course.title}`;
+            document.getElementById('quizTitle').textContent = quiz.title;
+            document.getElementById('quizFooter').classList.remove('hidden');
+
+            renderQuizQuestion();
+            document.getElementById('quizModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeQuizModal() {
+            document.getElementById('quizModal').classList.add('hidden');
+            document.body.style.overflow = '';
+            activeQuiz = null;
+        }
+
+        function renderQuizQuestion() {
+            const total = activeQuiz.questions.length;
+            const q = activeQuiz.questions[currentQuestionIdx];
+            hasAnsweredCurrent = false;
+
+            document.getElementById('quizProgressBar').style.width = `${Math.round((currentQuestionIdx / total) * 100)}%`;
+            document.getElementById('quizCounterText').textContent = `Soru ${currentQuestionIdx + 1} / ${total}`;
+            document.getElementById('nextQuestionBtn').classList.add('hidden');
+
+            const body = document.getElementById('quizBody');
+            body.innerHTML = `
+                <div class="space-y-4">
+                    <div class="p-4 rounded-xl bg-[#090d16] border border-[#1e293b]">
+                        <p class="font-semibold text-base text-[#f1f5f9]">${q.question}</p>
+                    </div>
+                    <div class="space-y-2.5">
+                        ${q.options.map((opt, idx) => `
+                            <button onclick="selectQuizAnswer(${idx})" id="quiz-opt-${idx}" class="w-full p-3.5 rounded-xl border border-[#1e293b] bg-[#090d16]/70 hover:border-indigo-500/70 text-left transition flex items-start gap-3">
+                                <span class="w-7 h-7 rounded-lg bg-[#1e293b] text-slate-200 font-bold text-xs flex items-center justify-center shrink-0">${['A','B','C','D','E'][idx]}</span>
+                                <span class="text-sm text-slate-200">${opt}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div id="quizExplanationBox" class="hidden p-4 rounded-xl bg-sky-950/40 border border-sky-800/70 text-xs sm:text-sm text-slate-200">
+                        <div class="font-bold text-sky-300 mb-1">💡 Açıklama / Mevzuat Dayanağı</div>
+                        <p>${q.explanation}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function selectQuizAnswer(selectedIdx) {
+            if (hasAnsweredCurrent) return;
+            hasAnsweredCurrent = true;
+            const q = activeQuiz.questions[currentQuestionIdx];
+            if (selectedIdx === q.correctIndex) quizScore++;
+
+            q.options.forEach((_, idx) => {
+                const btn = document.getElementById(`quiz-opt-${idx}`);
+                btn.disabled = true;
+                if (idx === q.correctIndex) btn.className = 'w-full p-3.5 rounded-xl border-2 border-emerald-500 bg-emerald-950/40 text-left flex items-start gap-3';
+                else if (idx === selectedIdx) btn.className = 'w-full p-3.5 rounded-xl border-2 border-rose-500 bg-rose-950/40 text-left flex items-start gap-3';
+                else btn.className = 'w-full p-3.5 rounded-xl border border-[#1e293b] bg-[#090d16]/40 opacity-50 text-left flex items-start gap-3';
+            });
+
+            document.getElementById('quizExplanationBox').classList.remove('hidden');
+            document.getElementById('nextQuestionBtn').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIdx < activeQuiz.questions.length - 1) {
+                currentQuestionIdx++;
+                renderQuizQuestion();
+            } else {
+                showQuizResult();
+            }
+        }
+
+        function showQuizResult() {
+            const total = activeQuiz.questions.length;
+            document.getElementById('quizProgressBar').style.width = '100%';
+            document.getElementById('quizFooter').classList.add('hidden');
+            document.getElementById('quizBody').innerHTML = `
+                <div class="text-center py-6 space-y-4">
+                    <div class="text-5xl">🏆</div>
+                    <h3 class="font-display font-extrabold text-2xl text-[#f1f5f9]">Konu Testi Tamamlandı!</h3>
+                    <p class="text-sm text-slate-300">${total} sorudan <strong class="text-emerald-400">${quizScore}</strong> doğru cevap verdiniz.</p>
+                    <button onclick="closeQuizModal()" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold">Kapat</button>
+                </div>
+            `;
+        }
+
+        // ============================================================================
+        // 6. KULLANICI ADI GİRİŞİ VE 100 SORULUK DENEME MOTORU
+        // ============================================================================
+        function promptUserBeforeExam(examKey = 'karma') {
+            pendingExamKeyToStart = examKey;
+            const meta = DENEME_HAVUZLARI[examKey] || DENEME_HAVUZLARI.karma;
+            document.getElementById('userModalExamTitle').textContent = meta.title;
+            const input = document.getElementById('candidateNameInput');
+            input.value = currentCandidateName;
+            document.getElementById('userNameErrorMsg').classList.add('hidden');
+            document.getElementById('userNameModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => input.focus(), 100);
+        }
+
+        function closeUserNameModal() {
+            document.getElementById('userNameModal').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        function confirmStartExamWithUser(e) {
+            e.preventDefault();
+            const input = document.getElementById('candidateNameInput');
+            const trimmed = input.value.trim();
+            if (trimmed.length < 2) {
+                document.getElementById('userNameErrorMsg').classList.remove('hidden');
+                return;
+            }
+            currentCandidateName = trimmed;
+            localStorage.setItem('academic_portal_last_user', currentCandidateName);
+            closeUserNameModal();
+            openMockExamModal(pendingExamKeyToStart, currentCandidateName);
+        }
+
+        function build100QuestionExam(examKey) {
+            const poolConfig = DENEME_HAVUZLARI[examKey] || DENEME_HAVUZLARI.karma;
+            const compiled = [];
+            let globalNumber = 1;
+
+            poolConfig.courses.forEach(subject => {
+                for (let i = 0; i < subject.quota; i++) {
+                    const userDefinedQ = subject.sorular[i];
+                    if (userDefinedQ) {
+                        compiled.push({
+                            number: globalNumber,
+                            subjectId: subject.id,
+                            subjectTitle: subject.title,
+                            subjectIcon: subject.icon,
+                            subjectCategory: subject.category,
+                            question: userDefinedQ.question,
+                            options: userDefinedQ.options,
+                            correctIndex: userDefinedQ.correctIndex,
+                            explanation: userDefinedQ.explanation || "Mevzuat açıklaması."
+                        });
+                    } else {
+                        compiled.push({
+                            number: globalNumber,
+                            subjectId: subject.id,
+                            subjectTitle: subject.title,
+                            subjectIcon: subject.icon,
+                            subjectCategory: subject.category,
+                            question: `[${subject.title} - Soru #${i + 1}] Bu slot soru yüklemeniz için ayrılmıştır (Örnek doğru cevap A şıkkıdır).`,
+                            options: ["Doğru Seçenek (Şablon A)", "Çeldirici Seçenek B", "Çeldirici Seçenek C", "Çeldirici Seçenek D", "Çeldirici Seçenek E"],
+                            correctIndex: 0,
+                            explanation: "Bu alan şablon sorudur. Kod içerisindeki DENEME_HAVUZLARI alanından kendi sorularınızı ekleyebilirsiniz."
+                        });
+                    }
+                    globalNumber++;
+                }
+            });
+            return compiled;
+        }
+
+        function openDistributionModal(examKey = 'karma') {
+            renderDistributionContent(examKey);
+            document.getElementById('distributionModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function renderDistributionContent(examKey) {
+            currentDistModalKey = examKey;
+            const poolConfig = DENEME_HAVUZLARI[examKey] || DENEME_HAVUZLARI.karma;
+
+            ['paem', 'yuksekLisans', 'karma'].forEach(key => {
+                const btn = document.getElementById(`distTab-${key}`);
+                if (btn) btn.className = key === examKey ? 'px-3 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 text-white' : 'px-3 py-1.5 rounded-xl text-xs font-bold bg-[#1e293b] border border-slate-700 text-slate-300';
+            });
+
+            document.getElementById('distModalTitle').innerHTML = `<span>${poolConfig.icon}</span> <span>${poolConfig.title}</span>`;
+            document.getElementById('distModalSubtitle').textContent = poolConfig.subtitle;
+
+            const container = document.getElementById('distributionTableContainer');
+            container.innerHTML = poolConfig.courses.map(sub => `
+                <div class="p-3 rounded-xl border border-[#1e293b] bg-[#090d16] flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xl">${sub.icon}</span>
+                        <div>
+                            <div class="font-bold text-sm text-[#f1f5f9]">${sub.title}</div>
+                            <div class="text-[11px] text-slate-400">${sub.category}</div>
+                        </div>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-lg bg-indigo-950 border border-indigo-800/70 text-indigo-300 font-bold text-xs">${sub.quota} Soru</span>
+                </div>
+            `).join('');
+        }
+
+        function startSelectedDistExam() {
+            closeDistributionModal();
+            promptUserBeforeExam(currentDistModalKey);
+        }
+
+        function closeDistributionModal() {
+            document.getElementById('distributionModal').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        function openMockExamModal(examKey = 'karma', candidateName = 'Aday') {
+            activeMockExamKey = examKey;
+            activeMockExamMeta = DENEME_HAVUZLARI[examKey] || DENEME_HAVUZLARI.karma;
+            mockExamQuestions = build100QuestionExam(examKey);
+            mockUserAnswers = {};
+            mockCurrentIdx = 0;
+            mockSubmitted = false;
+            mockSecondsLeft = 100 * 60;
+            mockTimerPaused = false;
+
+            document.getElementById('mockHeaderIcon').textContent = activeMockExamMeta.icon;
+            document.getElementById('mockHeaderTitle').textContent = activeMockExamMeta.title;
+            document.getElementById('mockCandidateBadge').textContent = `👤 ${candidateName}`;
+            document.getElementById('mockHeaderSubtitle').textContent = `${activeMockExamMeta.subtitle} • 100 Dakika`;
+
+            document.getElementById('mockExamWorkspace').classList.remove('hidden');
+            document.getElementById('mockResultScreen').classList.add('hidden');
+            document.getElementById('finishMockBtn').classList.remove('hidden');
+            document.getElementById('timerBox').classList.remove('hidden');
+
+            populateSubjectJumpControls();
+            renderMockOptikGrid();
+            renderMockQuestion();
+            startMockTimer();
+
+            document.getElementById('mockExamModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMockExamModal() {
+            stopMockTimer();
+            document.getElementById('mockExamModal').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        function setMockMode(mode) {
+            mockMode = mode;
+            document.getElementById('modeExamBtn').className = mode === 'exam' ? 'px-2.5 py-1 rounded-lg bg-[#090d16] text-indigo-300 shadow-sm' : 'px-2.5 py-1 rounded-lg text-slate-400';
+            document.getElementById('modePracticeBtn').className = mode === 'practice' ? 'px-2.5 py-1 rounded-lg bg-[#090d16] text-indigo-300 shadow-sm' : 'px-2.5 py-1 rounded-lg text-slate-400';
+            renderMockQuestion();
+        }
+
+        function startMockTimer() {
+            stopMockTimer();
+            updateMockTimerDisplay();
+            mockTimerInterval = setInterval(() => {
+                if (mockTimerPaused || mockSubmitted) return;
+                if (mockSecondsLeft > 0) {
+                    mockSecondsLeft--;
+                    updateMockTimerDisplay();
+                } else {
+                    finishMockExam();
+                }
+            }, 1000);
+        }
+
+        function stopMockTimer() {
+            if (mockTimerInterval) clearInterval(mockTimerInterval);
+        }
+
+        function toggleMockTimer() {
+            mockTimerPaused = !mockTimerPaused;
+            document.getElementById('timerPauseBtn').textContent = mockTimerPaused ? 'Devam' : 'Duraklat';
+        }
+
+        function updateMockTimerDisplay() {
+            const mins = Math.floor(mockSecondsLeft / 60);
+            const secs = mockSecondsLeft % 60;
+            document.getElementById('mockTimerText').textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+        }
+
+        function populateSubjectJumpControls() {
+            const select = document.getElementById('subjectJumpSelect');
+            select.innerHTML = '<option value="">Ders Başlangıcına Git...</option>';
+            let startIdx = 0;
+            activeMockExamMeta.courses.forEach(sub => {
+                const opt = document.createElement('option');
+                opt.value = startIdx;
+                opt.textContent = `${sub.icon} ${sub.title} (Soru ${startIdx + 1})`;
+                select.appendChild(opt);
+                startIdx += sub.quota;
+            });
+        }
+
+        function jumpToSubjectStart(val) {
+            if (val === '') return;
+            mockCurrentIdx = parseInt(val, 10);
+            renderMockQuestion();
+            renderMockOptikGrid();
+        }
+
+        function renderMockQuestion() {
+            const q = mockExamQuestions[mockCurrentIdx];
+            const ans = mockUserAnswers[mockCurrentIdx];
+            const showFeedback = mockSubmitted || (mockMode === 'practice' && ans !== undefined);
+
+            document.getElementById('mockPrevBtn').disabled = mockCurrentIdx === 0;
+            document.getElementById('mockNextBtn').disabled = mockCurrentIdx === 99;
+
+            document.getElementById('mockQuestionArea').innerHTML = `
+                <div class="flex items-center justify-between">
+                    <span class="px-3 py-1 rounded-xl bg-indigo-950 border border-indigo-800/70 text-indigo-300 text-xs font-bold">${q.subjectIcon} ${q.subjectTitle}</span>
+                    <span class="text-xs font-bold text-slate-400">Soru ${q.number} / 100</span>
+                </div>
+                <div class="p-4 rounded-2xl border border-[#1e293b] bg-[#090d16]">
+                    <p class="font-medium text-base text-[#f1f5f9] leading-relaxed">${q.question}</p>
+                </div>
+                <div class="space-y-2.5">
+                    ${q.options.map((opt, idx) => {
+                        let cls = 'w-full p-3.5 rounded-xl border text-left transition flex items-center gap-3 ';
+                        if (showFeedback) {
+                            if (idx === q.correctIndex) cls += 'border-emerald-500 bg-emerald-950/40';
+                            else if (idx === ans) cls += 'border-rose-500 bg-rose-950/40';
+                            else cls += 'border-[#1e293b] opacity-50';
+                        } else if (idx === ans) {
+                            cls += 'border-indigo-500 bg-indigo-950/50 ring-1 ring-indigo-500';
+                        } else {
+                            cls += 'border-[#1e293b] bg-[#090d16]/70 hover:border-indigo-500/70';
+                        }
+                        return `
+                            <button onclick="selectMockOption(${idx})" ${mockSubmitted ? 'disabled' : ''} class="${cls}">
+                                <span class="w-7 h-7 rounded-lg bg-[#1e293b] text-slate-200 font-bold text-xs flex items-center justify-center shrink-0">${['A','B','C','D','E'][idx]}</span>
+                                <span class="text-sm text-slate-200">${opt}</span>
+                            </button>
+                        `;
+                    }).join('')}
+                </div>
+                ${showFeedback ? `<div class="p-4 rounded-xl bg-sky-950/40 border border-sky-800/70 text-xs text-slate-200"><strong class="text-sky-300">💡 Açıklama:</strong> ${q.explanation}</div>` : ''}
+            `;
+        }
+
+        function selectMockOption(idx) {
+            if (mockSubmitted) return;
+            mockUserAnswers[mockCurrentIdx] = idx;
+            renderMockQuestion();
+            renderMockOptikGrid();
+        }
+
+        function clearCurrentMockAnswer() {
+            if (mockSubmitted) return;
+            delete mockUserAnswers[mockCurrentIdx];
+            renderMockQuestion();
+            renderMockOptikGrid();
+        }
+
+        function navigateMock(delta) {
+            const next = mockCurrentIdx + delta;
+            if (next >= 0 && next < 100) {
+                mockCurrentIdx = next;
+                renderMockQuestion();
+                renderMockOptikGrid();
+            }
+        }
+
+        function renderMockOptikGrid() {
+            const grid = document.getElementById('mockOptikGrid');
+            const answered = Object.keys(mockUserAnswers).length;
+            document.getElementById('mockAnsweredSummary').textContent = `${answered} / 100 İşaretli`;
+
+            grid.innerHTML = mockExamQuestions.map((q, idx) => {
+                const ans = mockUserAnswers[idx];
+                const isCur = idx === mockCurrentIdx;
+                let cls = 'h-8 rounded-lg text-xs font-bold flex items-center justify-center transition ';
+                if (ans !== undefined) cls += 'bg-indigo-600 text-white ';
+                else cls += 'bg-[#111827] border border-[#1e293b] text-slate-400 hover:text-white ';
+                if (isCur) cls += 'ring-2 ring-amber-400 ';
+                return `<button onclick="jumpToMock(${idx})" class="${cls}">${q.number}</button>`;
+            }).join('');
+        }
+
+        function jumpToMock(idx) {
+            mockCurrentIdx = idx;
+            renderMockQuestion();
+            renderMockOptikGrid();
+        }
+
+        // ============================================================================
+        // 7. SINAV BİTİRME, PUAN HESAPLAMA (4 YANLIŞ 1 DOĞRU) VE SKOR TABLOSUNA KAYIT
+        // ============================================================================
+        function finishMockExam() {
+            mockSubmitted = true;
+            stopMockTimer();
+
+            let correct = 0, wrong = 0, blank = 0;
+            const courseStats = {};
+
+            activeMockExamMeta.courses.forEach(c => {
+                courseStats[c.id] = { title: c.title, icon: c.icon, quota: c.quota, correct: 0, wrong: 0, blank: 0 };
+            });
+
+            mockExamQuestions.forEach((q, idx) => {
+                const ans = mockUserAnswers[idx];
+                const st = courseStats[q.subjectId];
+                if (ans === undefined) {
+                    blank++;
+                    if (st) st.blank++;
+                } else if (ans === q.correctIndex) {
+                    correct++;
+                    if (st) st.correct++;
+                } else {
+                    wrong++;
+                    if (st) st.wrong++;
+                }
+            });
+
+            const rawNet = correct - (wrong / 4);
+            const net = Math.max(0, Number(rawNet.toFixed(2)));
+            const score = Number(net.toFixed(2));
+
+            const todayStr = new Date().toLocaleDateString('tr-TR');
+            const newEntryId = 'entry-' + Date.now();
+            const newEntry = {
+                id: newEntryId,
+                name: currentCandidateName || 'İsimsiz Aday',
+                examType: activeMockExamKey,
+                examTitle: activeMockExamMeta.shortTitle,
+                correct,
+                wrong,
+                blank,
+                net,
+                score,
+                date: todayStr
+            };
+
+            const updatedList = saveLeaderboardEntry(newEntry);
+            const rank = updatedList.findIndex(item => item.id === newEntryId) + 1;
+
+            document.getElementById('mockExamWorkspace').classList.add('hidden');
+            document.getElementById('finishMockBtn').classList.add('hidden');
+            document.getElementById('timerBox').classList.add('hidden');
+
+            const res = document.getElementById('mockResultScreen');
+            res.classList.remove('hidden');
+
+            const courseRowsHtml = Object.values(courseStats).map(st => {
+                const subNet = Math.max(0, st.correct - (st.wrong / 4)).toFixed(2);
+                return `
+                    <div class="p-3 rounded-xl bg-[#090d16] border border-[#1e293b] flex items-center justify-between gap-2 text-xs sm:text-sm">
+                        <div class="flex items-center gap-2 font-semibold text-[#f1f5f9]">
+                            <span>${st.icon}</span>
+                            <span>${st.title} (${st.quota})</span>
+                        </div>
+                        <div class="flex items-center gap-3 font-mono text-xs">
+                            <span class="text-emerald-400 font-bold">${st.correct}D</span>
+                            <span class="text-rose-400 font-bold">${st.wrong}Y</span>
+                            <span class="text-slate-500">${st.blank}B</span>
+                            <span class="px-2 py-0.5 rounded bg-indigo-950 border border-indigo-800/70 text-indigo-300 font-bold">${subNet} Net</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            res.innerHTML = `
+                <div class="max-w-3xl mx-auto space-y-6">
+                    <div class="text-center space-y-2">
+                        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-extrabold">
+                            <span>🏆</span><span>Genel Sıralamanız: #${rank} / ${updatedList.length} Aday</span>
+                        </div>
+                        <h3 class="font-display font-extrabold text-2xl sm:text-3xl text-[#f1f5f9]">
+                            Tebrikler, ${escapeHtml(newEntry.name)}!
+                        </h3>
+                        <p class="text-xs sm:text-sm text-slate-400">Sonucunuz hesaplandı ve Skor Tablosuna kaydedildi.</p>
+                    </div>
+
+                    <!-- Özet Puan Kartları -->
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                        <div class="p-3.5 bg-emerald-950/40 border border-emerald-800/70 rounded-2xl text-center">
+                            <div class="text-2xl font-extrabold text-emerald-400">${correct}</div>
+                            <div class="text-xs font-semibold text-emerald-300">Doğru</div>
+                        </div>
+                        <div class="p-3.5 bg-rose-950/40 border border-rose-800/70 rounded-2xl text-center">
+                            <div class="text-2xl font-extrabold text-rose-400">${wrong}</div>
+                            <div class="text-xs font-semibold text-rose-300">Yanlış</div>
+                        </div>
+                        <div class="p-3.5 bg-[#090d16] border border-[#1e293b] rounded-2xl text-center">
+                            <div class="text-2xl font-extrabold text-slate-300">${blank}</div>
+                            <div class="text-xs font-semibold text-slate-400">Boş</div>
+                        </div>
+                        <div class="p-3.5 bg-sky-950/40 border border-sky-800/70 rounded-2xl text-center">
+                            <div class="text-2xl font-extrabold text-sky-400">${net.toFixed(2)}</div>
+                            <div class="text-xs font-semibold text-sky-300">Net</div>
+                        </div>
+                        <div class="col-span-2 sm:col-span-1 p-3.5 bg-indigo-600 text-white rounded-2xl text-center shadow-lg shadow-indigo-950/50">
+                            <div class="text-2xl font-extrabold">${score.toFixed(2)}</div>
+                            <div class="text-xs font-bold text-indigo-100">TOPLAM PUAN</div>
+                        </div>
+                    </div>
+
+                    <!-- Ders Bazlı Başarı Karnesi -->
+                    <div class="space-y-2.5">
+                        <h4 class="font-display font-bold text-sm text-slate-200">📊 Ders Bazlı Performans Karnesi</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                            ${courseRowsHtml}
+                        </div>
+                    </div>
+
+                    <!-- Alt Aksiyon Butonları -->
+                    <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+                        <button onclick="closeMockExamModal(); openLeaderboardModal('${activeMockExamKey}', '${newEntryId}');" class="px-5 py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs sm:text-sm font-extrabold shadow-md transition flex items-center gap-2">
+                            <span>🏆</span><span>Skor Tablosunda Yerini Gör</span>
+                        </button>
+                        <button onclick="closeMockExamModal()" class="px-5 py-3 rounded-xl bg-[#1e293b] hover:bg-slate-700 text-slate-100 text-xs sm:text-sm font-bold transition">
+                            Ana Sayfaya Dön
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ============================================================================
+        // 8. SKOR TABLOSU (LİDERLİK SIRALAMASI) MODALI
+        // ============================================================================
+        function openLeaderboardModal(filterType = 'all', highlightEntryId = null) {
+            activeLeaderboardFilter = filterType;
+            renderLeaderboardTable(highlightEntryId);
+            document.getElementById('leaderboardModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLeaderboardModal() {
+            document.getElementById('leaderboardModal').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        function filterLeaderboard(type) {
+            activeLeaderboardFilter = type;
+            renderLeaderboardTable();
+        }
+
+        function renderLeaderboardTable(highlightEntryId = null) {
+            ['all', 'karma', 'paem', 'yuksekLisans'].forEach(key => {
+                const btn = document.getElementById(`lbFilter-${key}`);
+                if (!btn) return;
+                btn.className = key === activeLeaderboardFilter
+                    ? 'px-3 py-1.5 rounded-xl text-xs font-bold transition bg-indigo-600 text-white shadow-sm'
+                    : 'px-3 py-1.5 rounded-xl text-xs font-bold transition bg-[#1e293b] border border-slate-700 text-slate-300 hover:text-white';
+            });
+
+            let list = getLeaderboardData().sort((a, b) => b.score - a.score || b.net - a.net);
+            if (activeLeaderboardFilter !== 'all') {
+                list = list.filter(item => item.examType === activeLeaderboardFilter);
+            }
+
+            document.getElementById('leaderboardTotalCount').textContent = `${list.length} Aday Listeleniyor`;
+            const tbody = document.getElementById('leaderboardTableBody');
+
+            if (list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-400">Bu kategoride henüz sınav sonucu bulunmuyor.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = list.map((item, idx) => {
+                const rank = idx + 1;
+                let rankBadge = `<span class="font-bold text-slate-400">#${rank}</span>`;
+                if (rank === 1) rankBadge = `<span class="text-lg" title="1. Sıra">🥇</span>`;
+                else if (rank === 2) rankBadge = `<span class="text-lg" title="2. Sıra">🥈</span>`;
+                else if (rank === 3) rankBadge = `<span class="text-lg" title="3. Sıra">🥉</span>`;
+
+                const isHighlighted = highlightEntryId && item.id === highlightEntryId;
+                const rowCls = isHighlighted
+                    ? 'bg-amber-950/40 font-semibold'
+                    : 'hover:bg-[#090d16]/70';
+
+                return `
+                    <tr class="${rowCls} transition">
+                        <td class="py-3 px-3 sm:px-4 text-center">${rankBadge}</td>
+                        <td class="py-3 px-3 sm:px-4">
+                            <div class="font-bold text-[#f1f5f9] flex items-center gap-1.5">
+                                <span>${escapeHtml(item.name)}</span>
+                                ${isHighlighted ? '<span class="px-2 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-extrabold">SİZ</span>' : ''}
+                            </div>
+                            <div class="text-[11px] text-slate-400 sm:hidden">${item.examTitle} • ${item.date}</div>
+                        </td>
+                        <td class="py-3 px-3 sm:px-4 hidden sm:table-cell">
+                            <span class="px-2.5 py-1 rounded-lg bg-[#1e293b] text-slate-300 text-xs font-medium">${item.examTitle}</span>
+                        </td>
+                        <td class="py-3 px-3 sm:px-4 text-center font-mono text-xs">
+                            <span class="text-emerald-400 font-bold">${item.correct}D</span> / <span class="text-rose-400 font-bold">${item.wrong}Y</span>
+                        </td>
+                        <td class="py-3 px-3 sm:px-4 text-center font-mono font-semibold text-slate-300">${Number(item.net).toFixed(2)}</td>
+                        <td class="py-3 px-3 sm:px-4 text-right">
+                            <span class="px-2.5 py-1 rounded-lg bg-indigo-600 text-white font-mono font-extrabold text-xs sm:text-sm">${Number(item.score).toFixed(2)}</span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function escapeHtml(str) {
+            return String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+        }
+
+        function openHelpModal() { document.getElementById('helpModal').classList.remove('hidden'); }
+        function closeHelpModal() { document.getElementById('helpModal').classList.add('hidden'); }
+
+        // Sayfa Yüklendiğinde Başlat
+        window.addEventListener('DOMContentLoaded', () => {
+            updateReadBadge();
+            updateLandingLeaderboardPreview();
+        });
+    </script>
+</body>
+</html>
